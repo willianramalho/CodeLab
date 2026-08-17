@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm run *)",
-      "Bash(curl http://localhost:3000/api/)",
-      "Bash(kill %1)"
-    ]
-  }
-}
