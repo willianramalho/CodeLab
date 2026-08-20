@@ -4,6 +4,7 @@ var cors = require('cors');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
+var searchRoutes = require('./modules/search/searchRoutes');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(cors({
 // --- Montagem das rotas da API ---
 // Todas as rotas ficam sob o prefixo /api (ex: /api/register, /api/videos).
 app.use('/api', indexRouter);
+app.use('/api', searchRoutes);
 
 // Captura qualquer rota não tratada pelos routers acima
 app.use((req, res) => {

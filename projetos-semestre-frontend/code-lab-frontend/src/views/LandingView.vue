@@ -1,16 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { getApiStatus } from '../services/systemService'
 
 const apiStatus = ref('verificando...')
 
 onMounted(async () => {
   try {
-    const response = await fetch(import.meta.env.VITE_API_URL)
-    const json = await response.json()
-    apiStatus.value = json.data.status // "online"
+    const response = await getApiStatus()
+    apiStatus.value = response.data.status // "online"
   } catch (error) {
     apiStatus.value = 'offline'
-    console.error('Erro ao consultar a API:', error)
+    console.error('Erro ao consultar a API:', error.message)
   }
 })
 </script>
