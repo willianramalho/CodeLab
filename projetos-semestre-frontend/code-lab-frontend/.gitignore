@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Activity files
+01 - Docs/atividade02/LEIA-ME.md

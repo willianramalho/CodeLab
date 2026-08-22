@@ -12,3 +12,4 @@ que o Claude te enviou na conversa), salve aqui dentro:
 
 O comentário explicando os três ramos do interceptor já foi escrito no topo do
 `src/services/api.js` (não precisa recriar, só conferir).
+aga
