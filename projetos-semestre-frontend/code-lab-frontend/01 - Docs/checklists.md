@@ -1,4 +1,4 @@
-# Checklists — Aula 01 e Aula 02 (CodeLab)
+# Checklists — Aula 01, Aula 02 e Aula 03 (CodeLab)
 
 ## Aula 01 — Parte A (Backend)
 
@@ -89,7 +89,63 @@
 - [x] Bloco de teste temporário (`search('a')` dentro do `onMounted` da
       Landing) removido — a função `search` continua em `searchService.js`
 
+## Aula 03 — Parte A (Backend — persistência e cadastro real)
+
+### Etapa 1 — Dependências
+- [x] `sequelize`, `mysql2`, `bcryptjs`, `express-validator` instalados
+
+### Etapa 2 — Banco de dados MySQL
+- [x] Banco `codelab_db` criado no MySQL, nome anotado na ficha
+- [x] `.env` atualizado com `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+- [x] `config/database.js` criado
+
+### Etapa 3 — config/constants.js
+- [x] `config/constants.js` criado
+
+### Etapa 4 — Módulo user
+- [x] `userModel.js` criado, com o campo de contagem renomeado para `challengesCount`
+- [x] `userValidator.js` criado
+- [x] `userService.js` criado, com `getPublicProfile` também usando `challengesCount`
+- [x] Nunca a senha (nem o hash) é devolvida em nenhuma resposta
+- [x] `middlewares/asyncHandler.js` criado
+- [x] `middlewares/errorHandler.js` criado
+- [x] `userController.js` e `userRoutes.js` criados
+
+### Etapa 5 — app.js
+- [x] `userRoutes` e `errorHandler` importados e registrados em `app.js`, na ordem certa
+- [x] Terminal exibe "Banco de dados sincronizado!" ao subir a API (validado nesta sessão)
+- [x] No MySQL, a tabela `users` existe, com todas as colunas do Model
+
+### Etapa 6 — Testando
+- [x] Cadastro com sucesso responde `201` com `{ id, username, email }` (validado nesta sessão)
+- [x] Senha curta responde `400` com a mensagem correta (validado nesta sessão)
+- [x] Cadastro duplicado responde `500` (validado nesta sessão)
+- [x] `GET /profile/:username` confirma os dados persistidos (validado nesta sessão)
+
+## Aula 03 — Parte B (Frontend — tela de Registro)
+
+### Etapa 2 — Navbar
+- [x] Link "Criar Conta" (`/register`) adicionado em `TheNavbar.vue`
+
+### Etapa 3 e 4 — Formulário e validação client-side
+- [x] Formulário controlado com `v-model` em `RegisterView.vue`
+- [x] `validate()` replica os mesmos limites de `config/constants.js` (username 3–20,
+      email, senha ≥6, confirmPassword, fullName obrigatório)
+- [x] Componente compila sem erros (validado via Vite nesta sessão)
+
+### Etapa 5 — Integração com a API
+- [x] `handleSubmit()` chama `authService.register()`, trata sucesso (redireciona
+      para `/login`) e erro (`apiErrorMessage`)
+
 ## Pendências que exigem ação manual (fora do alcance desta sessão)
 
 - [ ] Capturar `curl-api.jpg`, `landing-status.jpg` e `erro-cors.jpg` (Aula 01)
       com a API e o front rodando ao mesmo tempo no seu ambiente
+- [ ] Etapa 6 da Aula 03 (Frontend): testar os 5 comportamentos manualmente no
+      navegador (envio vazio, senha curta, cadastro válido, cadastro duplicado
+      com Network mostrando 500, `curl /api/profile/<username>`) — não é possível
+      interagir com o navegador nesta sessão
+- [ ] Prints da entrega da Aula 03: `tabela-users.jpg`, `curl-cadastro-sucesso.jpg`,
+      `curl-erro-validacao.jpg`, `curl-erro-duplicidade.jpg`, `curl-profile.jpg`,
+      `registro-erros.jpg`, `registro-duplicidade-network.jpg`
+- [ ] Gerar os `.zip` de entrega (backend e frontend, sem `node_modules`)

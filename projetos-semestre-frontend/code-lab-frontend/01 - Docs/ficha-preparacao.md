@@ -7,6 +7,8 @@
 | Porta da API (back-end) | 3000 |
 | Porta do front-end (Vue/Vite) | 5173 |
 | Nome do campo de busca da entidade principal (plural, camelCase) | `challenges` |
+| Nome do banco de dados MySQL do seu projeto | `codelab_db` |
+| Nome do campo de contagem de itens publicados (plural, camelCase) | `challengesCount` |
 
 > Observação: esta ficha foi recriada com base nas configurações já presentes no
 > projeto (`.env` do back-end e do front-end) e na Lista de Projetos, pois a versão

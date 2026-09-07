@@ -5,6 +5,8 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var searchRoutes = require('./modules/search/searchRoutes');
+var userRoutes = require('./modules/user/userRoutes');
+var errorHandler = require('./middlewares/errorHandler');
 
 var app = express();
 
@@ -23,6 +25,7 @@ app.use(cors({
 // Todas as rotas ficam sob o prefixo /api (ex: /api/register, /api/videos).
 app.use('/api', indexRouter);
 app.use('/api', searchRoutes);
+app.use('/api', userRoutes);
 
 // Captura qualquer rota não tratada pelos routers acima
 app.use((req, res) => {
@@ -32,5 +35,14 @@ app.use((req, res) => {
         errors: []
     });
 });
+
+// Middleware de erro centralizado — precisa ser o último app.use() do arquivo,
+// pois só é alcançado via next(err), nunca pela ordem normal de execução.
+app.use(errorHandler);
+
+const sequelize = require('./config/database');
+sequelize.sync({ alter: true })
+    .then(() => console.log('Banco de dados sincronizado!'))
+    .catch(err => console.error('Erro ao sincronizar banco:', err));
 
 module.exports = app;
