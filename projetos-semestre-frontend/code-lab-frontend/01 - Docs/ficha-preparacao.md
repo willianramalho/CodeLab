@@ -9,6 +9,7 @@
 | Nome do campo de busca da entidade principal (plural, camelCase) | `challenges` |
 | Nome do banco de dados MySQL do seu projeto | `codelab_db` |
 | Nome do campo de contagem de itens publicados (plural, camelCase) | `challengesCount` |
+| Cor de marca do seu projeto (hex) | `#198754` (verde) |
 
 > Observação: esta ficha foi recriada com base nas configurações já presentes no
 > projeto (`.env` do back-end e do front-end) e na Lista de Projetos, pois a versão

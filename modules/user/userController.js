@@ -14,3 +14,21 @@ exports.getPublicProfile = async (req, res) => {
 
     return success(res, user);
 };
+
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+
+    const result = await userService.loginUser(email, password);
+
+    return success(res, result, 'Login realizado com sucesso!');
+};
+
+exports.logout = async (req, res) => {
+    return success(res, null, 'Logout realizado com sucesso.');
+};
+
+exports.getMyProfile = async (req, res) => {
+    const user = await userService.getUserProfile(req.user.id);
+
+    return success(res, user);
+};

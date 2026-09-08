@@ -137,6 +137,49 @@
 - [x] `handleSubmit()` chama `authService.register()`, trata sucesso (redireciona
       para `/login`) e erro (`apiErrorMessage`)
 
+## Aula 04 — Parte A (Backend — Login, JWT e Middleware de Autenticação)
+
+### Checklist das tarefas
+- [x] `jsonwebtoken` instalado
+- [x] `.env` atualizado com `JWT_SECRET` e `JWT_EXPIRES_IN`
+- [x] `config/jwt.js` criado, com `generateToken` e `verifyToken`
+- [x] `middlewares/auth.js` criado (`isAuthenticated`)
+- [x] `userService.js` atualizado com `loginUser` e `getUserProfile`
+- [x] `userValidator.js` atualizado com `loginValidator`
+- [x] `userController.js` atualizado com `login`, `logout`, `getMyProfile`
+- [x] `userRoutes.js` atualizado, com `/profile/me` antes de `/profile/:username`
+
+### Checklist dos testes
+- [x] Login com sucesso devolve `token` e `user` (incluindo `isAdmin`) (validado nesta sessão via curl)
+- [x] Senha errada devolve `500` com mensagem genérica (validado nesta sessão via curl)
+- [x] `GET /profile/me` sem token devolve `401` (validado nesta sessão via curl)
+- [x] `GET /profile/me` com token válido devolve os dados do usuário (validado nesta sessão via curl)
+- [x] `GET /profile/me` com token inválido devolve `401` (validado nesta sessão via curl)
+
+## Aula 04 — Parte B (Frontend — Login, Pinia e Proteção de Rotas)
+
+### Checklist das tarefas
+- [x] `createPinia()` registrado em `main.js`, antes de `.use(router)`
+- [x] `stores/auth.js` criado, com persistência via `localStorage`
+- [x] Interceptor de requisição anexando `Authorization` quando existe token
+- [x] Interceptor de resposta limpando a sessão e redirecionando em qualquer `401`
+- [x] Nomes de chave (`auth_token`, `auth_user`) batem entre a store e o interceptor
+- [x] Bootstrap 5 (CSS) incluído via CDN em `index.html`
+- [x] `assets/main.css` criado, com a cor de marca (`#198754`)
+- [x] Tela de Login funcional, chamando `authStore.login(...)`
+- [x] Destino padrão pós-login ajustado para a rota `feed`
+- [x] Guarda de rota (`router.beforeEach`) bloqueando `requiresAuth: true`
+- [x] `useAuthStore()` chamado dentro do callback do `beforeEach`, não no topo do arquivo
+- [x] Navbar mostra links diferentes conforme o estado de login
+- [x] Logout limpa a sessão e redireciona ao Login
+
+### Checklist de testes
+- [ ] Login funcional → redireciona à tela Feed **(testar manualmente no navegador)**
+- [ ] F5 na página logado → sessão persiste **(testar manualmente no navegador)**
+- [ ] Logout → acessar rota protegida deve redirecionar ao Login com `?redirect=...` **(testar manualmente)**
+- [ ] Login a partir da tela redirecionada → deve voltar à rota original **(testar manualmente)**
+- [ ] Editar o token no localStorage e recarregar rota protegida → logout automático (401) **(testar manualmente)**
+
 ## Pendências que exigem ação manual (fora do alcance desta sessão)
 
 - [ ] Capturar `curl-api.jpg`, `landing-status.jpg` e `erro-cors.jpg` (Aula 01)
@@ -148,4 +191,9 @@
 - [ ] Prints da entrega da Aula 03: `tabela-users.jpg`, `curl-cadastro-sucesso.jpg`,
       `curl-erro-validacao.jpg`, `curl-erro-duplicidade.jpg`, `curl-profile.jpg`,
       `registro-erros.jpg`, `registro-duplicidade-network.jpg`
+- [ ] Testes manuais de front da Aula 04 (5 itens acima) e todos os prints da
+      entrega (`login-estilizado.jpg`, prints de cada curl da Parte A, print do
+      redirect com `?redirect=...`, print do console `Perfil autenticado OK:`,
+      print do logout automático) — não é possível interagir com o navegador
+      nesta sessão
 - [ ] Gerar os `.zip` de entrega (backend e frontend, sem `node_modules`)

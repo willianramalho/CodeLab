@@ -27,12 +27,40 @@ const api = axios.create({
   },
 })
 
+/**
+ * Interceptor de requisição: anexa o token no header Authorization sempre
+ * que existir um. O token é lido diretamente do localStorage (e não da
+ * store de autenticação) para evitar uma dependência circular: a store
+ * chama métodos deste arquivo (api.js) para fazer login/logout, então este
+ * arquivo não pode importar a store de volta.
+ */
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response) {
       // A API respondeu, mas com um status de erro (4xx ou 5xx)
       const apiError = error.response.data
+
+      if (error.response.status === 401) {
+        // Sessão expirada/inválida: limpa a sessão e força o logout.
+        // Usa window.location (em vez de importar o router aqui) pelo mesmo
+        // motivo do token acima: importar o router importaria a store, que
+        // importa o authService, que importa este próprio arquivo de volta.
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('auth_user')
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login'
+        }
+      }
+
       return Promise.reject({
         message: apiError.message || 'Ocorreu um erro na requisição.',
         errors: apiError.errors || [],
