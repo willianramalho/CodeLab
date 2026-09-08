@@ -1,6 +1,7 @@
 var express = require('express');
 var logger = require('morgan');
 var cors = require('cors');
+var path = require('path');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -20,6 +21,9 @@ app.use(cors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true
 }));
+
+// Pasta de uploads servida publicamente (ex: /uploads/profiles/<arquivo>).
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // --- Montagem das rotas da API ---
 // Todas as rotas ficam sob o prefixo /api (ex: /api/register, /api/videos).
