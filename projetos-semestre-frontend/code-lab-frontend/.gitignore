@@ -12,8 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Roteiros/relatórios pessoais de aula (não fazem parte da entrega)
-01 - Docs/roteiro-relatorio-aulas-03-04-05.md
+    01 - Docs/roteiro-relatorio-aulas-03-04-05.md
 
 # Editor diretorios e arquivos
 .vscode/*

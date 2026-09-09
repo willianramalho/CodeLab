@@ -83,9 +83,9 @@
       criados
 - [x] `LandingView.vue` refatorada para usar `systemService` em vez de `fetch`
 - [x] Console mostrou `Busca OK:` com `{ query: 'a', challenges: [], users: [] }`
-      (print em `atividade02/print-console-busca-ok.png`)
+      (print em `atividade02/print-console-busca-ok.jpg`)
 - [x] Erro de rede provocado de propósito caiu na mensagem amigável do
-      interceptor (print em `atividade02/print-erro-rede.png`)
+      interceptor (print em `atividade02/print-erro-rede.jpg`)
 - [x] Bloco de teste temporário (`search('a')` dentro do `onMounted` da
       Landing) removido — a função `search` continua em `searchService.js`
 
@@ -179,21 +179,3 @@
 - [ ] Logout → acessar rota protegida deve redirecionar ao Login com `?redirect=...` **(testar manualmente)**
 - [ ] Login a partir da tela redirecionada → deve voltar à rota original **(testar manualmente)**
 - [ ] Editar o token no localStorage e recarregar rota protegida → logout automático (401) **(testar manualmente)**
-
-## Pendências que exigem ação manual (fora do alcance desta sessão)
-
-- [ ] Capturar `curl-api.jpg`, `landing-status.jpg` e `erro-cors.jpg` (Aula 01)
-      com a API e o front rodando ao mesmo tempo no seu ambiente
-- [ ] Etapa 6 da Aula 03 (Frontend): testar os 5 comportamentos manualmente no
-      navegador (envio vazio, senha curta, cadastro válido, cadastro duplicado
-      com Network mostrando 500, `curl /api/profile/<username>`) — não é possível
-      interagir com o navegador nesta sessão
-- [ ] Prints da entrega da Aula 03: `tabela-users.jpg`, `curl-cadastro-sucesso.jpg`,
-      `curl-erro-validacao.jpg`, `curl-erro-duplicidade.jpg`, `curl-profile.jpg`,
-      `registro-erros.jpg`, `registro-duplicidade-network.jpg`
-- [ ] Testes manuais de front da Aula 04 (5 itens acima) e todos os prints da
-      entrega (`login-estilizado.jpg`, prints de cada curl da Parte A, print do
-      redirect com `?redirect=...`, print do console `Perfil autenticado OK:`,
-      print do logout automático) — não é possível interagir com o navegador
-      nesta sessão
-- [ ] Gerar os `.zip` de entrega (backend e frontend, sem `node_modules`)

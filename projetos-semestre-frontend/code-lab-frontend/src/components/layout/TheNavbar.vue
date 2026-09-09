@@ -18,6 +18,7 @@ async function handleLogout() {
       <router-link to="/">Início</router-link>
 
       <template v-if="authStore.isAuthenticated">
+        <router-link :to="{ name: 'my-profile' }">Meu Perfil</router-link>
         <span>Olá, {{ authStore.user?.username }}</span>
         <button type="button" class="btn btn-sm btn-brand" @click="handleLogout">Sair</button>
       </template>
