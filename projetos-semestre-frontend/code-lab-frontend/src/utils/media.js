@@ -1,16 +1,17 @@
 /**
  * Monta a URL pública completa de uma foto de perfil a partir do nome de
  * arquivo salvo no banco (ex: "default-profile.png"). A base usada aqui é
- * VITE_API_BASE_URL (a raiz da API, sem o /api), porque a pasta de uploads é
- * servida por fora do prefixo /api (ver express.static em app.js).
+ * VITE_UPLOADS_BASE_URL, que já aponta para a pasta de uploads servida por
+ * fora do prefixo /api (ver express.static em app.js), e já inclui o
+ * segmento "/uploads" — por isso não é concatenado de novo aqui.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const UPLOADS_BASE_URL = import.meta.env.VITE_UPLOADS_BASE_URL
 
 export function getProfilePhotoUrl(filename) {
   if (!filename) {
-    return `${API_BASE_URL}/uploads/profiles/default-profile.png`
+    return `${UPLOADS_BASE_URL}/profiles/default-profile.png`
   }
 
-  return `${API_BASE_URL}/uploads/profiles/${filename}`
+  return `${UPLOADS_BASE_URL}/profiles/${filename}`
 }

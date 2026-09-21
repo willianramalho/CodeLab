@@ -2,6 +2,9 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { register } from '../../services/authService'
+import FormCard from '../../components/base/FormCard.vue'
+import BaseInput from '../../components/base/BaseInput.vue'
+import BaseButton from '../../components/base/BaseButton.vue'
 
 const router = useRouter()
 
@@ -80,69 +83,64 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="auth-page">
-    <h1>Criar Conta</h1>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+        <FormCard title="Criar Conta">
+          <form @submit.prevent="handleSubmit" novalidate>
+            <BaseInput
+              id="fullName"
+              label="Nome completo"
+              v-model="form.fullName"
+              :error="errors.fullName"
+            />
 
-    <form @submit.prevent="handleSubmit">
-      <div class="field">
-        <label for="fullName">Nome completo</label>
-        <input id="fullName" type="text" v-model="form.fullName" />
-        <span v-if="errors.fullName" class="error-message">{{ errors.fullName }}</span>
+            <BaseInput
+              id="username"
+              label="Usuário"
+              v-model="form.username"
+              :error="errors.username"
+            />
+
+            <BaseInput
+              id="email"
+              type="email"
+              label="E-mail"
+              v-model="form.email"
+              :error="errors.email"
+            />
+
+            <BaseInput
+              id="password"
+              type="password"
+              label="Senha"
+              v-model="form.password"
+              :error="errors.password"
+            />
+
+            <BaseInput
+              id="confirmPassword"
+              type="password"
+              label="Confirmar senha"
+              v-model="form.confirmPassword"
+              :error="errors.confirmPassword"
+            />
+
+            <div v-if="apiErrorMessage" class="alert alert-danger py-2" role="alert">
+              {{ apiErrorMessage }}
+            </div>
+
+            <BaseButton class="w-100" :loading="isSubmitting">
+              {{ isSubmitting ? 'Criando conta...' : 'Criar Minha Conta' }}
+            </BaseButton>
+          </form>
+
+          <p class="text-center mt-3 mb-0">
+            Já tem conta?
+            <router-link to="/login">Entrar</router-link>
+          </p>
+        </FormCard>
       </div>
-
-      <div class="field">
-        <label for="username">Usuário</label>
-        <input id="username" type="text" v-model="form.username" />
-        <span v-if="errors.username" class="error-message">{{ errors.username }}</span>
-      </div>
-
-      <div class="field">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" v-model="form.email" />
-        <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
-      </div>
-
-      <div class="field">
-        <label for="password">Senha</label>
-        <input id="password" type="password" v-model="form.password" />
-        <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-      </div>
-
-      <div class="field">
-        <label for="confirmPassword">Confirmar senha</label>
-        <input id="confirmPassword" type="password" v-model="form.confirmPassword" />
-        <span v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</span>
-      </div>
-
-      <p v-if="apiErrorMessage" class="api-error">{{ apiErrorMessage }}</p>
-
-      <button type="submit" :disabled="isSubmitting">
-        {{ isSubmitting ? 'Criando conta...' : 'Criar Minha Conta' }}
-      </button>
-    </form>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.auth-page {
-  max-width: 400px;
-  margin: 2rem auto;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.error-message {
-  color: #c0392b;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-}
-
-.api-error {
-  color: #c0392b;
-  margin-bottom: 1rem;
-}
-</style>

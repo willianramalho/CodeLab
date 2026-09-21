@@ -2,6 +2,9 @@
 import { onMounted, reactive, ref } from 'vue'
 import { getMyProfile, updateProfile } from '../../services/authService'
 import { getProfilePhotoUrl } from '../../utils/media'
+import FormCard from '../../components/base/FormCard.vue'
+import BaseInput from '../../components/base/BaseInput.vue'
+import BaseButton from '../../components/base/BaseButton.vue'
 
 // Mesmo limite de config/constants.js (BIO_MAX) no back-end — cópia
 // otimista só para dar feedback instantâneo, quem decide de verdade é a API.
@@ -101,69 +104,62 @@ async function handleSubmit() {
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-sm-9 col-md-6 col-lg-5">
-        <div class="card shadow-sm mt-5">
-          <div class="card-body p-4">
-            <h1 class="h3 text-brand text-center mb-4">Meu Perfil</h1>
+        <FormCard title="Meu Perfil">
+          <div v-if="isLoading" class="text-center text-muted py-4">Carregando...</div>
 
-            <div v-if="isLoading" class="text-center text-muted py-4">Carregando...</div>
-
-            <form v-else @submit.prevent="handleSubmit" novalidate>
-              <div class="text-center mb-4">
-                <img
-                  :src="previewUrl || currentPhotoUrl"
-                  alt="Foto de perfil"
-                  class="rounded-circle border"
-                  width="120"
-                  height="120"
-                  style="object-fit: cover"
-                />
-                <div class="mt-2">
-                  <label for="photo" class="form-label d-block">Trocar foto</label>
-                  <input
-                    id="photo"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    class="form-control"
-                    @change="handlePhotoChange"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="fullName" class="form-label">Nome completo</label>
+          <form v-else @submit.prevent="handleSubmit" novalidate>
+            <div class="text-center mb-4">
+              <img
+                :src="previewUrl || currentPhotoUrl"
+                alt="Foto de perfil"
+                class="rounded-circle border"
+                width="120"
+                height="120"
+                style="object-fit: cover"
+              />
+              <div class="mt-2">
+                <label for="photo" class="form-label d-block">Trocar foto</label>
                 <input
-                  id="fullName"
-                  type="text"
+                  id="photo"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
                   class="form-control"
-                  v-model="form.fullName"
+                  @change="handlePhotoChange"
                 />
-                <span v-if="errors.fullName" class="text-danger small">{{ errors.fullName }}</span>
               </div>
+            </div>
 
-              <div class="mb-3">
-                <label for="bio" class="form-label">Bio</label>
-                <textarea
-                  id="bio"
-                  class="form-control"
-                  rows="3"
-                  v-model="form.bio"
-                ></textarea>
-                <span v-if="errors.bio" class="text-danger small">{{ errors.bio }}</span>
-              </div>
+            <BaseInput
+              id="fullName"
+              label="Nome completo"
+              v-model="form.fullName"
+              :error="errors.fullName"
+            />
 
-              <div v-if="apiErrorMessage" class="alert alert-danger py-2" role="alert">
-                {{ apiErrorMessage }}
-              </div>
-              <div v-if="successMessage" class="alert alert-success py-2" role="alert">
-                {{ successMessage }}
-              </div>
+            <div class="mb-3">
+              <label for="bio" class="form-label">Bio</label>
+              <textarea
+                id="bio"
+                class="form-control"
+                :class="{ 'is-invalid': errors.bio }"
+                rows="3"
+                v-model="form.bio"
+              ></textarea>
+              <div v-if="errors.bio" class="invalid-feedback">{{ errors.bio }}</div>
+            </div>
 
-              <button type="submit" class="btn btn-brand w-100" :disabled="isSubmitting">
-                {{ isSubmitting ? 'Salvando...' : 'Salvar alterações' }}
-              </button>
-            </form>
-          </div>
-        </div>
+            <div v-if="apiErrorMessage" class="alert alert-danger py-2" role="alert">
+              {{ apiErrorMessage }}
+            </div>
+            <div v-if="successMessage" class="alert alert-success py-2" role="alert">
+              {{ successMessage }}
+            </div>
+
+            <BaseButton class="w-100" :loading="isSubmitting">
+              {{ isSubmitting ? 'Salvando...' : 'Salvar alterações' }}
+            </BaseButton>
+          </form>
+        </FormCard>
       </div>
     </div>
   </div>

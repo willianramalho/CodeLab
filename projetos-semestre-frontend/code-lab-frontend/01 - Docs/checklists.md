@@ -1,4 +1,4 @@
-# Checklists — Aula 01, Aula 02 e Aula 03 (CodeLab)
+# Checklists — Aula 01 a Aula 06 (CodeLab)
 
 ## Aula 01 — Parte A (Backend)
 
@@ -179,3 +179,69 @@
 - [ ] Logout → acessar rota protegida deve redirecionar ao Login com `?redirect=...` **(testar manualmente)**
 - [ ] Login a partir da tela redirecionada → deve voltar à rota original **(testar manualmente)**
 - [ ] Editar o token no localStorage e recarregar rota protegida → logout automático (401) **(testar manualmente)**
+
+## Aula 05 — Parte A (Backend — Upload de Arquivos com Multer)
+
+> Esta seção documenta, retroativamente, o que já existia implementado no código
+> (`middlewares/profileMulter.js`, `config/constants.js`, `PUT /profile/me`) mas nunca
+> tinha sido registrado neste checklist — as evidências já existem em `atividade05/`.
+
+- [x] Pasta `public/uploads/profiles/` com `default-profile.png`
+- [x] `multer` instalado
+- [x] `VALIDATION.BIO_MAX: 255` em `config/constants.js`
+- [x] `middlewares/profileMulter.js` criado (`fileFilter` jpeg/png/webp, limite 5MB)
+- [x] `express.static('/uploads', ...)` registrado em `app.js`, antes das rotas da API
+- [x] `profileUpdateValidator`, `updateUserProfile`, `updateProfile` e a rota
+      `PUT /profile/me` criados, na ordem correta (depois de `GET /profile/me`, antes de
+      `GET /profile/:username`)
+
+### Checklist dos testes
+- [x] Atualização sem foto mantém a foto atual (evidência: `atividade05/perfil-carregado.jpg`)
+- [x] Atualização com foto nova funciona e remove a antiga do disco (evidência:
+      `atividade05/upload-multipart.jpg`, `atividade05/inspecionar_network.jpg`)
+- [x] `GET /uploads/profiles/<arquivo>` responde `200`
+- [ ] Bio acima de 255 caracteres recusada com `400` — sem evidência salva ainda,
+      confirme/recapture se possível
+
+## Aula 05 — Parte B (Frontend — Formulário Multipart e Tela de Meu Perfil)
+
+- [x] Link "Meu Perfil" na Navbar, visível só quando logado (evidência:
+      `atividade05/navbar-link-perfil.jpg`)
+- [x] `.env` com `VITE_UPLOADS_BASE_URL`, `utils/media.js` criado
+- [x] `updateProfile(formData)` em `authService.js` — única chamada a sobrescrever o
+      `Content-Type` padrão
+- [x] Preview local da foto antes do envio, sem chamada de rede (evidência:
+      `atividade05/preview-local.jpg`)
+
+## Aula 06 — Checkpoint de Componentização
+
+### Parte A (Backend — sem código novo)
+- [x] `checkpoint-01.md` criado e respondido (`atividade06/checkpoint-01.md`), revisando
+      o código real de `modules/search/` e `modules/user/`
+- [x] Endpoints existentes continuam respondendo como esperado (nenhuma alteração de
+      código feita durante a revisão)
+
+### Parte B (Frontend)
+- [x] `bootstrap-icons` incluído via CDN em `index.html`
+- [x] Três componentes-base (`BaseInput`, `BaseButton`, `FormCard`) criados em
+      `src/components/base/`
+- [x] Registro, Login e Edição de Perfil refatorados para usar os componentes-base
+- [x] Tela de Registro agora visualmente consistente com Login/Perfil, usando a cor de
+      marca já existente (`#198754`), sem nenhuma cor nova introduzida
+- [x] `composables/useAuth.js` criado (fachada sobre `useAuthStore`)
+- [x] Guarda de rota (`router/index.js`) atualizado para usar `useAuth()`
+- [x] Navbar atualizada para usar `useAuth()`, com classes reais de navbar Bootstrap
+- [x] Sidebar atualizada para usar `useAuth()` — some por completo quando deslogado
+- [x] Nenhum link novo aponta para funcionalidade que o projeto ainda não construiu
+- [x] Bônus: corrigido bug em `utils/media.js` (usava `VITE_API_BASE_URL`, variável
+      inexistente; agora usa `VITE_UPLOADS_BASE_URL`, que já existia no `.env`) — sem
+      essa correção a foto de perfil aparecia quebrada
+
+### Checklist de testes
+- [ ] Cadastro → redireciona ao Login, tela já estilizada **(testar manualmente)**
+- [ ] Login → redireciona à tela principal **(testar manualmente)**
+- [ ] Navbar → alterna corretamente entre logado/deslogado **(testar manualmente)**
+- [ ] Edição de Perfil → dados reais, edição e upload continuam funcionando com os
+      componentes-base **(testar manualmente)**
+- [ ] Guarda de rota → acesso direto deslogado redireciona ao Login **(testar manualmente)**
+- [ ] Console sem erros novos durante o teste **(testar manualmente)**

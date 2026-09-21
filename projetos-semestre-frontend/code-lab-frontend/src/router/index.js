@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { useAuth } from '../composables/useAuth'
 
 const routes = [
   { path: '/', name: 'landing', component: () => import('../views/LandingView.vue') },
@@ -33,16 +33,17 @@ const router = createRouter({
   routes,
 })
 
-// useAuthStore() só pode ser chamada aqui dentro (depois do Pinia já estar
-// registrado em main.js), nunca no topo do arquivo.
+// useAuth() (e a store de autenticação por trás dela) só pode ser chamado
+// aqui dentro (depois do Pinia já estar registrado em main.js), nunca no
+// topo do arquivo.
 router.beforeEach((to) => {
-  const authStore = useAuthStore()
+  const { isAuthenticated, isAdmin } = useAuth()
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  if (to.meta.requiresAuth && !isAuthenticated.value) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+  if (to.meta.requiresAdmin && !isAdmin.value) {
     return { name: 'feed' }
   }
 })
