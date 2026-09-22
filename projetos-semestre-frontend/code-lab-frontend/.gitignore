@@ -12,7 +12,9 @@ dist
 dist-ssr
 *.local
 
-    01 - Docs/roteiro-relatorio-aulas-03-04-05.md
+# Notas/instruções geradas pela IA (não são entregáveis pedidos pelos enunciados)
+01 - Docs/roteiro-relatorio-aulas-03-04-05.md
+01 - Docs/**/LEIA-ME.md
 
 # Editor diretorios e arquivos
 .vscode/*

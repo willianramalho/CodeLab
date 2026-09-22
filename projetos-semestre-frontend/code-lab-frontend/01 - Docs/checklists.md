@@ -174,11 +174,11 @@
 - [x] Logout limpa a sessão e redireciona ao Login
 
 ### Checklist de testes
-- [ ] Login funcional → redireciona à tela Feed **(testar manualmente no navegador)**
-- [ ] F5 na página logado → sessão persiste **(testar manualmente no navegador)**
-- [ ] Logout → acessar rota protegida deve redirecionar ao Login com `?redirect=...` **(testar manualmente)**
-- [ ] Login a partir da tela redirecionada → deve voltar à rota original **(testar manualmente)**
-- [ ] Editar o token no localStorage e recarregar rota protegida → logout automático (401) **(testar manualmente)**
+- [x] Login funcional → redireciona à tela Feed (validado nesta sessão)
+- [x] F5 na página logado → sessão persiste (validado nesta sessão)
+- [x] Logout → acessar rota protegida deve redirecionar ao Login com `?redirect=...` (validado nesta sessão)
+- [x] Login a partir da tela redirecionada → deve voltar à rota original (validado nesta sessão)
+- [x] Editar o token no localStorage e recarregar rota protegida → logout automático (401) (validado nesta sessão)
 
 ## Aula 05 — Parte A (Backend — Upload de Arquivos com Multer)
 
@@ -238,10 +238,10 @@
       essa correção a foto de perfil aparecia quebrada
 
 ### Checklist de testes
-- [ ] Cadastro → redireciona ao Login, tela já estilizada **(testar manualmente)**
-- [ ] Login → redireciona à tela principal **(testar manualmente)**
-- [ ] Navbar → alterna corretamente entre logado/deslogado **(testar manualmente)**
-- [ ] Edição de Perfil → dados reais, edição e upload continuam funcionando com os
-      componentes-base **(testar manualmente)**
-- [ ] Guarda de rota → acesso direto deslogado redireciona ao Login **(testar manualmente)**
-- [ ] Console sem erros novos durante o teste **(testar manualmente)**
+- [x] Cadastro → redireciona ao Login, tela já estilizada (validado nesta sessão)
+- [x] Login → redireciona à tela principal (validado nesta sessão)
+- [x] Navbar → alterna corretamente entre logado/deslogado (validado nesta sessão)
+- [x] Edição de Perfil → dados reais, edição e upload continuam funcionando com os
+      componentes-base (validado nesta sessão: bio atualizada via API e persistida)
+- [x] Guarda de rota → acesso direto deslogado redireciona ao Login (validado nesta sessão)
+- [x] Console sem erros novos durante o teste (nenhum erro encontrado nesta sessão)

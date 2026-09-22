@@ -64,7 +64,7 @@ async function handleSubmit() {
   isSubmitting.value = true
 
   try {
-    const response = await register({
+    await register({
       username: form.username.trim(),
       email: form.email.trim(),
       password: form.password,
@@ -72,7 +72,6 @@ async function handleSubmit() {
       fullName: form.fullName.trim(),
     })
 
-    console.log('Conta criada:', response.data)
     router.push({ name: 'login' })
   } catch (error) {
     apiErrorMessage.value = error.message
