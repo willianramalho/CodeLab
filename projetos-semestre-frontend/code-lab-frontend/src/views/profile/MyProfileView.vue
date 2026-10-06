@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { getMyProfile, updateProfile } from '../../services/authService'
 import { getProfilePhotoUrl } from '../../utils/media'
+import { useAuthStore } from '../../stores/auth'
 import FormCard from '../../components/base/FormCard.vue'
 import BaseInput from '../../components/base/BaseInput.vue'
 import BaseButton from '../../components/base/BaseButton.vue'
@@ -9,6 +10,8 @@ import BaseButton from '../../components/base/BaseButton.vue'
 // Mesmo limite de config/constants.js (BIO_MAX) no back-end — cópia
 // otimista só para dar feedback instantâneo, quem decide de verdade é a API.
 const BIO_MAX = 255
+
+const authStore = useAuthStore()
 
 const form = reactive({
   fullName: '',
@@ -35,6 +38,9 @@ onMounted(async () => {
     form.fullName = response.data.fullName || ''
     form.bio = response.data.bio || ''
     currentPhotoUrl.value = getProfilePhotoUrl(response.data.profilePicture)
+    if (authStore.user && authStore.user.profilePicture !== response.data.profilePicture) {
+      authStore.setSession(authStore.token, { ...authStore.user, profilePicture: response.data.profilePicture })
+    }
   } catch (error) {
     apiErrorMessage.value = error.message
   } finally {
@@ -89,6 +95,8 @@ async function handleSubmit() {
   try {
     const response = await updateProfile(formData)
     currentPhotoUrl.value = getProfilePhotoUrl(response.data.profilePicture)
+    // Mantém o avatar da Navbar em dia com a foto nova.
+    authStore.setSession(authStore.token, { ...authStore.user, profilePicture: response.data.profilePicture, fullName: response.data.fullName })
     previewUrl.value = ''
     selectedFile.value = null
     successMessage.value = response.message || 'Perfil atualizado com sucesso!'

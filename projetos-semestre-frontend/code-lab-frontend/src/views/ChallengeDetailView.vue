@@ -59,9 +59,15 @@ watch(() => route.params.id, load, { immediate: true })
 
       <pre class="code-view">{{ code }}</pre>
 
-      <a :href="getChallengeFileUrl(challenge.sourceCode)" download class="btn btn-brand mt-3">
-        <i class="bi bi-download"></i> Baixar arquivo
-      </a>
+      <div class="d-flex gap-2 mt-3">
+        <a :href="getChallengeFileUrl(challenge.sourceCode)" download class="btn btn-brand">
+          <i class="bi bi-download"></i> Baixar arquivo
+        </a>
+        <!-- Só conveniência de UI: quem de fato decide é a API (403 no PUT/GET edit). -->
+        <router-link v-if="isOwner" :to="{ name: 'challenge-edit', params: { id: challenge.id } }" class="btn btn-outline-secondary">
+          <i class="bi bi-pencil"></i> Editar
+        </router-link>
+      </div>
     </article>
   </div>
 </template>

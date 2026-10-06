@@ -3,6 +3,8 @@ import { computed } from 'vue'
 
 const props = defineProps({
   challenge: { type: Object, required: true },
+  // Em telas que já são do próprio autor (Perfil, Meus Itens), o autor some.
+  showAuthor: { type: Boolean, default: true },
 })
 
 const extension = computed(() => {
@@ -14,19 +16,33 @@ const extension = computed(() => {
 const createdAt = computed(() =>
   new Date(props.challenge.createdAt).toLocaleDateString('pt-BR'),
 )
+
+const authorUsername = computed(() => props.challenge.author?.username)
 </script>
 
 <template>
-  <router-link :to="`/challenges/${challenge.id}`" class="challenge-card">
-    <div class="challenge-card-cover">{{ extension || '</>' }}</div>
+  <!-- <article>, não <a>: o card tem vários alvos clicáveis (detalhe, autor,
+       ações). Um <a> externo não pode conter botões nem outros links. -->
+  <article class="challenge-card">
+    <router-link :to="`/challenges/${challenge.id}`" class="challenge-card-cover">
+      {{ extension || '</>' }}
+    </router-link>
     <div class="p-3">
-      <h2 class="h6 mb-1 text-truncate">{{ challenge.title }}</h2>
+      <h2 class="h6 mb-1 text-truncate">
+        <router-link :to="`/challenges/${challenge.id}`" class="challenge-card-title">{{ challenge.title }}</router-link>
+      </h2>
       <p class="small text-muted mb-2">
-        por @{{ challenge.author?.username ?? 'desconhecido' }} · {{ createdAt }}
+        <template v-if="showAuthor && authorUsername">
+          por <router-link :to="`/profile/${authorUsername}`">@{{ authorUsername }}</router-link> ·
+        </template>
+        {{ createdAt }}
       </p>
       <p class="small mb-0 text-muted">
         <i class="bi bi-eye"></i> {{ challenge.viewsCount }}
       </p>
+      <div v-if="$slots.actions" class="d-flex gap-2 mt-3">
+        <slot name="actions" />
+      </div>
     </div>
-  </router-link>
+  </article>
 </template>

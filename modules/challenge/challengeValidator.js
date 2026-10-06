@@ -29,6 +29,23 @@ const validate = (req, res, next) => {
     throw error;
 };
 
+const titleAndDescriptionRules = [
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('O título é obrigatório.')
+        .isLength({ max: VALIDATION.TITLE_MAX })
+        .withMessage(`O título deve ter no máximo ${VALIDATION.TITLE_MAX} caracteres.`),
+    body('description')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ max: VALIDATION.DESCRIPTION_MAX })
+        .withMessage(`A descrição deve ter no máximo ${VALIDATION.DESCRIPTION_MAX} caracteres.`)
+];
+
+// Na edição o arquivo é opcional: só título/descrição são validados.
+exports.updateChallengeValidator = [...titleAndDescriptionRules, validate];
+
 exports.createChallengeValidator = [
     body('title')
         .trim()

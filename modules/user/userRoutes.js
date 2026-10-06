@@ -4,6 +4,7 @@ const userController = require('./userController');
 const { registerValidator, loginValidator, profileUpdateValidator } = require('./userValidator');
 const asyncHandler = require('../../middlewares/asyncHandler');
 const isAuthenticated = require('../../middlewares/auth');
+const optionalAuth = require('../../middlewares/optionalAuth');
 const profileMulter = require('../../middlewares/profileMulter');
 
 // Envolve o multer para transformar qualquer erro dele (tipo inválido, arquivo
@@ -24,7 +25,7 @@ router.post('/logout', asyncHandler(userController.logout));
 
 router.get('/profile/me', isAuthenticated, asyncHandler(userController.getMyProfile));
 router.put('/profile/me', isAuthenticated, uploadProfilePhoto, profileUpdateValidator, asyncHandler(userController.updateProfile));
-router.get('/profile/:username', asyncHandler(userController.getPublicProfile));
+router.get('/profile/:username', optionalAuth, asyncHandler(userController.getPublicProfile));
 router.get('/feed', isAuthenticated, asyncHandler(userController.getFeed));
 
 module.exports = router;

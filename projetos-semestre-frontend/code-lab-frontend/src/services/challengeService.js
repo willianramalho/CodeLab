@@ -25,3 +25,24 @@ export function getChallengeById(id) {
 export function getFeed({ page = 1, limit = 9 } = {}) {
   return api.get('/feed', { params: { page, limit } })
 }
+
+/** Itens do usuário logado, do mais novo para o mais antigo. */
+export function getMyChallenges() {
+  return api.get('/my-challenges')
+}
+
+/** Dados para pré-preencher o formulário de edição (só o dono; 403/404 caso contrário). */
+export function getChallengeForEdit(id) {
+  return api.get(`/challenges/${id}/edit`)
+}
+
+/** Edição com troca opcional do arquivo; multipart, como createChallenge. */
+export function updateChallenge(id, formData) {
+  return api.put(`/challenges/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
+export function deleteChallenge(id) {
+  return api.delete(`/challenges/${id}`)
+}

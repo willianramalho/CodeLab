@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
 };
 
 exports.getPublicProfile = async (req, res) => {
-    const user = await userService.getPublicProfile(req.params.username);
+    const user = await userService.getPublicProfile(req.params.username, req.user ? req.user.id : undefined);
 
     return success(res, user);
 };

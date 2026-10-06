@@ -226,6 +226,7 @@ async function handleSubmit() {
             </div>
             <div v-if="successMessage" class="alert alert-success py-2" role="alert">
               {{ successMessage }}
+              <router-link :to="{ name: 'my-challenges' }" class="alert-link ms-1">Ver em Meus Itens</router-link>
             </div>
 
             <BaseButton class="w-100" :loading="isSubmitting">

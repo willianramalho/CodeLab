@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const challengeController = require('./challengeController');
-const { createChallengeValidator } = require('./challengeValidator');
+const { createChallengeValidator, updateChallengeValidator } = require('./challengeValidator');
 const asyncHandler = require('../../middlewares/asyncHandler');
 const isAuthenticated = require('../../middlewares/auth');
 const optionalAuth = require('../../middlewares/optionalAuth');
@@ -35,6 +35,10 @@ function uploadChallengeFile(req, res, next) {
 }
 
 router.post('/challenges', isAuthenticated, uploadChallengeFile, createChallengeValidator, asyncHandler(challengeController.createChallenge));
+router.get('/my-challenges', isAuthenticated, asyncHandler(challengeController.getMyChallenges));
+router.get('/challenges/:id/edit', isAuthenticated, asyncHandler(challengeController.getChallengeForEdit));
+router.put('/challenges/:id', isAuthenticated, uploadChallengeFile, updateChallengeValidator, asyncHandler(challengeController.updateChallenge));
+router.delete('/challenges/:id', isAuthenticated, asyncHandler(challengeController.deleteChallenge));
 router.get('/challenges/:id', optionalAuth, asyncHandler(challengeController.getChallenge));
 
 module.exports = router;

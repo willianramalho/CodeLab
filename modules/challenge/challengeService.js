@@ -92,4 +92,79 @@ async function getFeed(page, limit) {
     };
 }
 
-module.exports = { createChallenge, getChallengeDetails, getFeed };
+// "Existe?" (404) sempre antes de "é seu?" (403): quem não é dono não deve
+// conseguir descobrir, pelo status, se um id inexistente poderia ser dele.
+async function findOwned(id, userId) {
+    const challenge = await Challenge.findByPk(id);
+
+    if (!challenge) {
+        const error = new Error('Desafio não encontrado.');
+        error.status = 404;
+        throw error;
+    }
+
+    if (challenge.userId !== userId) {
+        const error = new Error('Você não tem permissão para alterar este desafio.');
+        error.status = 403;
+        throw error;
+    }
+
+    return challenge;
+}
+
+function removeFile(filename) {
+    return fs.promises.unlink(path.join(UPLOADS_DIR, filename)).catch(() => {});
+}
+
+async function getMyChallenges(userId) {
+    const challenges = await Challenge.findAll({
+        where: { userId },
+        order: [['createdAt', 'DESC'], ['id', 'DESC']]
+    });
+
+    return challenges.map(serializeChallenge);
+}
+
+async function getChallengeForEdit(id, userId) {
+    const challenge = await findOwned(id, userId);
+    return serializeChallenge(challenge);
+}
+
+async function updateChallenge(id, userId, { title, description, newFilename }) {
+    const challenge = await findOwned(id, userId);
+    const oldFilename = challenge.sourceCode;
+
+    challenge.title = title;
+    challenge.description = description || null;
+    if (newFilename) {
+        challenge.sourceCode = newFilename;
+    }
+
+    // Banco primeiro, disco depois: se o save falhar, o arquivo antigo continua
+    // intacto e o registro válido. Na ordem inversa, um save falho deixaria o
+    // registro apontando para um arquivo que já não existe.
+    await challenge.save();
+
+    if (newFilename) {
+        await removeFile(oldFilename);
+    }
+
+    return serializeChallenge(challenge);
+}
+
+async function deleteChallenge(id, userId) {
+    const challenge = await findOwned(id, userId);
+    const filename = challenge.sourceCode;
+
+    await sequelize.transaction(async (t) => {
+        await challenge.destroy({ transaction: t });
+        await User.decrement('challengesCount', { by: 1, where: { id: userId }, transaction: t });
+    });
+
+    await removeFile(filename);
+}
+
+module.exports = {
+    createChallenge, getChallengeDetails, getFeed,
+    getMyChallenges, getChallengeForEdit, updateChallenge, deleteChallenge
+};

@@ -1,0 +1,11 @@
+# Respostas — Aula 09
+
+**401, 403 e 404 e a ordem das verificações.** 401 significa "não sei quem você é" (sem token ou token inválido); 403 significa "sei quem você é, mas isso não é seu"; 404 significa "esse recurso não existe". Primeiro checo se o item existe (404) e só depois se é do usuário (403): assim não há como comparar o dono de algo que não existe, e quem não é dono não consegue descobrir, pelo status, se um id existe ou não.
+
+**Banco antes do disco.** Ao trocar ou excluir um arquivo, atualizo o banco primeiro e só então apago o arquivo. Se o banco falhar, o arquivo antigo continua lá e o registro continua válido. Na ordem inversa, o arquivo seria apagado e, se o banco falhasse em seguida, o registro ficaria apontando para um arquivo que não existe mais (um link quebrado sem como recuperar). O contrário (banco ok, disco falha) só deixa lixo no disco, que é bem menos grave.
+
+**Arquivo órfão.** É um arquivo no disco que nenhum registro do banco referencia. Exemplos do CodeLab: (1) um PUT com arquivo novo feito por quem não é dono (403) ou com título vazio (400): o Multer já gravou o arquivo antes de a validação/checagem falhar; (2) o arquivo antigo depois de trocar o `sourceCode` na edição ou de excluir o desafio. A limpeza do primeiro caso acontece no `middlewares/errorHandler.js` (apaga `req.file` quando a requisição falha); a do segundo, no `challengeService` (`updateChallenge`/`deleteChallenge`), depois que o banco já foi atualizado.
+
+**Botão de excluir fora de `<a>` e modal fora do card.** Um botão dentro de um `<a>` é HTML inválido e o clique "vaza" para o link, navegando para o detalhe em vez de excluir. Por isso o card é um `<article>` com links próprios (título/capa/autor) e a área de ações separada. O modal também não pode ficar dentro do card: ele herdaria clique, `overflow` e `transform` do card (ficaria cortado ou posicionado em relação ao card, e um clique nele poderia ser tratado como clique no card). Um único `BaseModal` fica fora da lista (e é teleportado para o `body`), centralizado na janela.
+
+**Esconder "Editar" não é segurança.** O botão só melhora a experiência: o front roda no navegador do usuário, que pode digitar a URL de edição ou chamar a API direto (curl, DevTools). Quem realmente protege é a API: `isAuthenticated` + a checagem de dono (404/403) em `GET /edit`, `PUT` e `DELETE`.

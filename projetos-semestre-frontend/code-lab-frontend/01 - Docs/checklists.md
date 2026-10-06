@@ -1,4 +1,4 @@
-# Checklists — Aula 01 a Aula 08 (CodeLab)
+# Checklists — Aula 01 a Aula 09 (CodeLab)
 
 ## Aula 01 — Parte A (Backend)
 
@@ -353,3 +353,60 @@
 - [x] Visualizações sobem a cada acesso ao detalhe (conferido via curl: 1 → 2 no desafio id 10)
 - [x] Id inexistente na URL → "Desafio não encontrado." com link "Voltar ao feed", sem quebrar a tela (validado no navegador)
 - [x] Prints `feed-real.jpg` e `detalhe-real.jpg` em `atividade08/`
+
+## Aula 09 — Parte A (Backend)
+
+> **Grupo B**: "capa/imagem" = `sourceCode` (único arquivo, código-fonte). No PUT, `multer.single('sourceCode')`
+> é opcional e troca o arquivo; no DELETE, um arquivo é apagado.
+
+### Checklist das tarefas
+- [x] `reload()` no detalhe (feito na Aula 08; duas chamadas seguidas → views 1 e 2, validado via curl)
+- [x] Verificação `404` antes de `403` (helper `findOwned` do `challengeService`, usado por edit/update/delete)
+- [x] Ordem banco → disco respeitada (`updateChallenge` e `deleteChallenge`)
+- [x] Contador do usuário decrementado na exclusão (`challengesCount`, validado: 9 → 10 → 9)
+- [x] Quatro handlers no controller (`getMyChallenges`, `getChallengeForEdit`, `updateChallenge`, `deleteChallenge`)
+- [x] Quatro rotas, com Multer antes do validador no `PUT`
+- [x] `include` + `order` no nível de cima em `getPublicProfile`
+- [x] `isOwner` devolvido no perfil público
+- [x] `/profile/:username` com `optionalAuth`, depois de `/profile/me`
+- [x] `errorHandler.js` limpa arquivos órfãos e continua sendo o último `app.use`
+
+### Checklist dos testes (validados via curl nesta sessão)
+- [x] `/my-challenges`: sem token `401`; com A lista (mais novo primeiro); com B `[]`
+- [x] `/challenges/:id/edit`: sem token `401`; B `403`; inexistente `404`; A `200` (views não mudam)
+- [x] PUT só texto → `200`, arquivo inalterado, pasta com 8 → 8 arquivos
+- [x] PUT com arquivo novo → `200`, nome mudou, pasta 8 → 8
+- [x] Órfãos: B com arquivo → `403` e A com título vazio → `400`, pasta 8 → 8
+- [x] DELETE: B `403`; A `200`; GET `404`; arquivo sumiu (8 → 7); contador −1; repetir `404`
+- [x] Perfil: anônimo `isOwner:false` com lista ordenada; dono `true`; B `false`; inexistente `404`
+- [x] Prints de cada curl salvos em `atividade09/` (`curl-1-my-challenges.jpg` a `curl-7-perfil.jpg`; os testes 3, 4, 5 e 6 mostram a contagem de arquivos antes e depois)
+
+## Aula 09 — Parte B (Frontend)
+
+### Checklist das tarefas
+- [x] `useClickOutside.js` criado
+- [x] `BaseModal.vue` criado
+- [x] `getMyChallenges`, `getChallengeForEdit`, `updateChallenge`, `deleteChallenge` criadas
+- [x] `getPublicProfile` criada
+- [x] Card sem `<a>` gigante, com autor clicável/opcional e slot `actions`
+- [x] Feed sem alteração (usa o card com os mesmos props)
+- [x] Menu do avatar (abre por clique, à direita, fecha fora/item/Esc) — implementado
+- [x] Perfil Público com os três botões (dono / logado / visitante)
+- [x] Meus Itens com modal fora do card, `busy` e remoção local
+- [x] Editar Item com e sem arquivo novo
+- [x] Autor clicável e botão "Editar" condicional no Detalhe
+- [x] Link para Meus Itens na mensagem de sucesso do Upload
+
+### Checklist dos testes (validados no navegador)
+- [x] Menu do avatar: abre, fecha fora, fecha com Esc, fecha ao escolher um item (evidência: `atividade09/menu-avatar.jpg`)
+- [x] "Ver Perfil" → próprio perfil com "Editar Perfil" e os itens (evidência: `atividade09/perfil-publico.jpg`); autor de card de outra conta → perfil com "Seguir", sem recarregar
+- [x] Deslogado em `/profile/teste123` → sem "Seguir" e sem "Editar Perfil"; username inexistente → "Usuário não encontrado.", tela intacta
+- [x] Meus Itens: com itens → grade com Editar/Excluir; modal abre sem navegar, centralizado; Cancelar/X/fora/Esc fecham; clique dentro não fecha (evidência: `atividade09/modal-exclusao.jpg`). Estado vazio com link "Enviar o primeiro" conferido no código (conta B sem itens: `/my-challenges` → `[]` no curl 1)
+- [x] Exclusão confirmada: item some sem recarregar; pasta de uploads 9 → 8 arquivos; perfil 11 → 10 desafios
+- [x] Edição: pré-preenchida (evidência: `atividade09/editar.jpg`); só texto → `PUT 200`, arquivo mantido; título vazio → "O título é obrigatório." sem nenhuma requisição na rede; troca de arquivo validada via curl (teste 4)
+- [x] Network: o PUT é enviado como `multipart/form-data` (`updateChallenge` em `challengeService.js`; mesmo padrão já evidenciado em `atividade07/upload-multipart.jpg`)
+- [x] Conta auditoria01 na URL de edição de item da teste123 → "Você não tem permissão para editar este desafio."; id inexistente → "Desafio não encontrado."
+- [x] Deslogado em `/my-challenges` → `/login?redirect=/my-challenges` → após entrar volta para Meus Itens
+- [x] "Editar" no Detalhe: visível para o dono, ausente para outros
+- [x] Regressão: Feed, Detalhe, Upload, Meu Perfil, Login/Logout
+- [x] Prints `menu-avatar.jpg`, `perfil-publico.jpg`, `modal-exclusao.jpg`, `editar.jpg` em `atividade09/`

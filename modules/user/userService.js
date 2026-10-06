@@ -1,4 +1,5 @@
 const User = require('./userModel');
+const Challenge = require('../challenge/challengeModel');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
@@ -53,6 +54,7 @@ async function loginUser(email, password) {
             username: user.username,
             email: user.email,
             fullName: user.fullName,
+            profilePicture: user.profilePicture,
             isAdmin: user.isAdmin
         }
     };
@@ -72,10 +74,16 @@ async function getUserProfile(userId) {
     return user;
 }
 
-async function getPublicProfile(username) {
+async function getPublicProfile(username, viewerId) {
     const user = await User.findOne({
         where: { username },
-        attributes: ['id', 'username', 'fullName', 'bio', 'profilePicture', 'followersCount', 'followingCount', 'challengesCount']
+        attributes: ['id', 'username', 'fullName', 'bio', 'profilePicture', 'followersCount', 'followingCount', 'challengesCount'],
+        include: [{
+            model: Challenge,
+            as: 'challenges',
+            attributes: ['id', 'title', 'description', 'sourceCode', 'viewsCount', 'userId', 'createdAt']
+        }],
+        order: [[{ model: Challenge, as: 'challenges' }, 'createdAt', 'DESC'], [{ model: Challenge, as: 'challenges' }, 'id', 'DESC']]
     });
 
     if (!user) {
@@ -84,7 +92,14 @@ async function getPublicProfile(username) {
         throw error;
     }
 
-    return user;
+    const profile = user.toJSON();
+    // Cada item do perfil também precisa do autor para o card reutilizável.
+    profile.challenges = profile.challenges.map((c) => ({
+        ...c,
+        author: { id: user.id, username: user.username, fullName: user.fullName, profilePicture: user.profilePicture }
+    }));
+
+    return { ...profile, isOwner: viewerId !== undefined && viewerId === user.id };
 }
 
 async function updateUserProfile(userId, { fullName, bio, photoFilename }) {

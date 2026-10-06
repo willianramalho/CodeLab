@@ -1,11 +1,24 @@
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../../composables/useAuth'
+import { useClickOutside } from '../../composables/useClickOutside'
+import { getProfilePhotoUrl } from '../../utils/media'
 
 const router = useRouter()
 const { user, isAuthenticated, logout } = useAuth()
 
+const menuOpen = ref(false)
+const menuRoot = ref(null)
+
+function closeMenu() {
+  menuOpen.value = false
+}
+
+useClickOutside(menuRoot, closeMenu)
+
 async function handleLogout() {
+  closeMenu()
   await logout()
   router.push({ name: 'login' })
 }
@@ -23,9 +36,37 @@ async function handleLogout() {
           <router-link :to="{ name: 'challenge-upload' }" class="nav-link text-white">
             <i class="bi bi-cloud-arrow-up me-1"></i>Enviar Desafio
           </router-link>
-          <router-link :to="{ name: 'my-profile' }" class="nav-link text-white">Meu Perfil</router-link>
-          <span class="text-white">Olá, {{ user?.username }}</span>
-          <button type="button" class="btn btn-sm btn-light" @click="handleLogout">Sair</button>
+
+          <div ref="menuRoot" class="avatar-menu" @keydown.esc="closeMenu">
+            <button
+              type="button"
+              class="btn p-0 border-0 d-flex align-items-center gap-2 text-white"
+              aria-haspopup="menu"
+              :aria-expanded="menuOpen"
+              @click="menuOpen = !menuOpen"
+            >
+              <img
+                :src="getProfilePhotoUrl(user?.profilePicture)"
+                alt="Menu do usuário"
+                class="rounded-circle border border-light"
+                width="36"
+                height="36"
+                style="object-fit: cover"
+              />
+              <span>{{ user?.username }}</span>
+            </button>
+
+            <div v-if="menuOpen" class="avatar-menu-list" role="menu" @click="closeMenu">
+              <router-link :to="{ name: 'my-profile' }" class="dropdown-item" role="menuitem">Editar Perfil</router-link>
+              <router-link
+                :to="{ name: 'public-profile', params: { username: user?.username } }"
+                class="dropdown-item"
+                role="menuitem"
+              >Ver Perfil</router-link>
+              <router-link :to="{ name: 'my-challenges' }" class="dropdown-item" role="menuitem">Meus Itens</router-link>
+              <button type="button" class="dropdown-item" role="menuitem" @click="handleLogout">Sair</button>
+            </div>
+          </div>
         </template>
         <template v-else>
           <router-link to="/login" class="nav-link text-white">Entrar</router-link>

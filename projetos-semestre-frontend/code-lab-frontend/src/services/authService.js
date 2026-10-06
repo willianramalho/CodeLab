@@ -26,3 +26,8 @@ export function updateProfile(formData) {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
+
+/** Perfil público com a lista de itens e isOwner (rota com optionalAuth). */
+export function getPublicProfile(username) {
+  return api.get(`/profile/${username}`)
+}
