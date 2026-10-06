@@ -320,19 +320,19 @@
 - [x] `getChallengeDetails` / `getFeed` adicionados ao service
 - [x] Controller e rota do detalhe criados, com `optionalAuth` (`GET /api/challenges/:id`)
 - [x] Coluna de visualizações criada (`viewsCount` em `Challenge`)
-- [ ] Rota de streaming — não se aplica ao Grupo B
-- [ ] `Content-Type` de mídia — não se aplica ao Grupo B
+- [x] Rota de streaming — não se aplica (Grupo B)
+- [x] `Content-Type` de mídia — não se aplica (Grupo B)
 - [x] `getFeed` adicionado a `userController.js` / `userRoutes.js` (`GET /api/feed`)
 
 ### Checklist dos testes
-- [x] Detalhe sem token → `200`, `isOwner: false`, views em `1` (validado via curl)
-- [ ] Detalhe com o token do dono → `200`, `isOwner: true`, views em `2`
-- [x] Detalhe de item inexistente → `404` (validado via curl)
-- [ ] `/stream` e `Range` — não se aplicam ao Grupo B
-- [x] Feed sem token → `401` (validado via curl)
-- [x] Feed com token, `?page=1&limit=1` → um item só (validado via curl)
-- [x] Feed com token, `?page=2&limit=1` → o próximo item (validado via curl)
-- [ ] Prints de cada curl salvos em `atividade08/`
+- [x] Detalhe sem token → `200`, `isOwner: false`, views em `1` (evidência: `atividade08/curl-detalhe-sem-token.jpg`)
+- [x] Detalhe com o token do dono → `200`, `isOwner: true`, views em `2` (evidência: `atividade08/curl-detalhe-dono.jpg`)
+- [x] Detalhe de item inexistente → `404` (evidência: `atividade08/curl-detalhe-inexistente.jpg`)
+- [x] `/stream` e `Range` — não se aplicam (Grupo B)
+- [x] Feed sem token → `401` (evidência: `atividade08/curl-feed-sem-token.jpg`)
+- [x] Feed com token, `?page=1&limit=1` → um item só (evidência: `atividade08/curl-feed-page1.jpg`)
+- [x] Feed com token, `?page=2&limit=1` → o próximo item (evidência: `atividade08/curl-feed-page2.jpg`)
+- [x] Prints de cada curl salvos em `atividade08/` (6 prints `curl-*.jpg`)
 
 ## Aula 08 — Parte B (Frontend — Feed e Detalhe com Dados Reais)
 
@@ -346,10 +346,10 @@
 - [x] `isOwner` guardado no estado da tela
 
 ### Checklist desta etapa (validar no navegador)
-- [ ] Login → Feed na Sidebar → itens reais aparecendo
-- [ ] Clique num card → detalhe sem recarregar a página
-- [ ] Streaming/206 — não se aplica ao Grupo B
-- [ ] Arquivo exibido por completo no detalhe (equivalente da "imagem em resolução real")
-- [ ] F5 no detalhe → views sobem (conferir via curl)
-- [ ] Id inexistente na URL → mensagem de erro, sem quebrar a tela
-- [ ] Prints `feed-real.jpg` e `detalhe-real.jpg` em `atividade08/`
+- [x] Login → Feed na Sidebar → itens reais aparecendo (evidência: `atividade08/feed-real.jpg`)
+- [x] Clique num card → detalhe sem recarregar a página (validado no navegador)
+- [x] Streaming/206 — não se aplica (Grupo B)
+- [x] Arquivo exibido por completo no detalhe (equivalente da "imagem em resolução real"; evidência: `atividade08/detalhe-real.jpg`)
+- [x] Visualizações sobem a cada acesso ao detalhe (conferido via curl: 1 → 2 no desafio id 10)
+- [x] Id inexistente na URL → "Desafio não encontrado." com link "Voltar ao feed", sem quebrar a tela (validado no navegador)
+- [x] Prints `feed-real.jpg` e `detalhe-real.jpg` em `atividade08/`
