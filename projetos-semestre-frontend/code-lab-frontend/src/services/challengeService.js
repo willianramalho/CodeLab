@@ -15,3 +15,13 @@ export function createChallenge(formData, onUploadProgress) {
     onUploadProgress,
   })
 }
+
+/** Detalhe público de um Desafio (a API usa optionalAuth e devolve isOwner). */
+export function getChallengeById(id) {
+  return api.get(`/challenges/${id}`)
+}
+
+/** Uma página do feed (protegido). Resposta: { items, page, limit, hasMore }. */
+export function getFeed({ page = 1, limit = 9 } = {}) {
+  return api.get('/feed', { params: { page, limit } })
+}

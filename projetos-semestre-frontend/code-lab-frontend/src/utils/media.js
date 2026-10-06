@@ -15,3 +15,13 @@ export function getProfilePhotoUrl(filename) {
 
   return `${UPLOADS_BASE_URL}/profiles/${filename}`
 }
+
+/**
+ * URL pública do arquivo de código-fonte de um Desafio (Grupo B: arquivo
+ * único, sem capa). Sempre aponta para o caminho estático /uploads — tags
+ * como <img>/<video> não enviam o cabeçalho Authorization, então o src
+ * precisa de uma rota que não exija token.
+ */
+export function getChallengeFileUrl(filename) {
+  return `${UPLOADS_BASE_URL}/challenges/${filename}`
+}

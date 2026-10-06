@@ -11,7 +11,9 @@ const Challenge = sequelize.define('Challenge',
         title:       { type: DataTypes.STRING(VALIDATION.TITLE_MAX), allowNull: false },
         description: { type: DataTypes.STRING(VALIDATION.DESCRIPTION_MAX), allowNull: true },
         // Guarda só o nome do arquivo em disco, igual a profilePicture em User.
-        sourceCode:  { type: DataTypes.STRING, allowNull: false }
+        sourceCode:  { type: DataTypes.STRING, allowNull: false },
+        // Aula 08: incrementada a cada GET /challenges/:id.
+        viewsCount:  { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 }
     },
     {
         timestamps: true,

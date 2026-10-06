@@ -36,4 +36,60 @@ async function createChallenge(userId, { title, description, sourceCodeFilename 
     }
 }
 
-module.exports = { createChallenge };
+const AUTHOR_ATTRIBUTES = ['id', 'username', 'fullName', 'profilePicture'];
+
+function serializeChallenge(challenge) {
+    return {
+        id: challenge.id,
+        title: challenge.title,
+        description: challenge.description,
+        sourceCode: challenge.sourceCode,
+        viewsCount: challenge.viewsCount,
+        userId: challenge.userId,
+        createdAt: challenge.createdAt,
+        author: challenge.author
+    };
+}
+
+// viewerId vem de optionalAuth: undefined para visitantes anônimos.
+async function getChallengeDetails(id, viewerId) {
+    const challenge = await Challenge.findByPk(id, {
+        include: [{ model: User, as: 'author', attributes: AUTHOR_ATTRIBUTES }]
+    });
+
+    if (!challenge) {
+        const error = new Error('Desafio não encontrado.');
+        error.status = 404;
+        throw error;
+    }
+
+    await challenge.increment('viewsCount', { by: 1 });
+    await challenge.reload();
+
+    return {
+        ...serializeChallenge(challenge),
+        isOwner: viewerId !== undefined && viewerId === challenge.userId
+    };
+}
+
+// offset = (page - 1) * limit: converte "página" (cliente) em "quantos pular" (banco).
+// Busca limit + 1 registros só para saber se existe próxima página.
+async function getFeed(page, limit) {
+    const offset = (page - 1) * limit;
+
+    const rows = await Challenge.findAll({
+        order: [['createdAt', 'DESC'], ['id', 'DESC']],
+        limit: limit + 1,
+        offset,
+        include: [{ model: User, as: 'author', attributes: AUTHOR_ATTRIBUTES }]
+    });
+
+    return {
+        items: rows.slice(0, limit).map(serializeChallenge),
+        page,
+        limit,
+        hasMore: rows.length > limit
+    };
+}
+
+module.exports = { createChallenge, getChallengeDetails, getFeed };

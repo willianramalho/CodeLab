@@ -1,4 +1,5 @@
 const userService = require('./userService');
+const challengeService = require('../challenge/challengeService');
 const { success } = require('../../middlewares/apiResponse');
 
 exports.register = async (req, res) => {
@@ -40,4 +41,13 @@ exports.updateProfile = async (req, res) => {
     const updatedUser = await userService.updateUserProfile(req.user.id, { fullName, bio, photoFilename });
 
     return success(res, updatedUser, 'Perfil atualizado com sucesso!');
+};
+
+exports.getFeed = async (req, res) => {
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 50);
+
+    const feed = await challengeService.getFeed(page, limit);
+
+    return success(res, feed);
 };

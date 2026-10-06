@@ -1,4 +1,4 @@
-# Checklists — Aula 01 a Aula 07 (CodeLab)
+# Checklists — Aula 01 a Aula 08 (CodeLab)
 
 ## Aula 01 — Parte A (Backend)
 
@@ -306,3 +306,50 @@
       requisição real; print em `atividade07/upload-multipart.jpg`)
 - [x] Registro criado no banco e `challengesCount` subiu após o envio pela tela (5 → 6)
 
+
+## Aula 08 — Parte A (Backend — Detalhe, Feed e Streaming)
+
+> **Grupo B**: o bloco de streaming (`/stream`, `Range`, `206`, `Content-Type` de mídia) não se
+> aplica. Adaptação: o arquivo do `Challenge` é código-fonte (não imagem), então o detalhe
+> busca o arquivo estático em `/uploads/challenges/` e o exibe em um bloco `<pre>`.
+> Feed (`getFeed`) fica em `userController.js` / `userRoutes.js`, delegando a consulta ao
+> `challengeService`.
+
+### Checklist das tarefas
+- [x] `middlewares/optionalAuth.js` criado
+- [x] `getChallengeDetails` / `getFeed` adicionados ao service
+- [x] Controller e rota do detalhe criados, com `optionalAuth` (`GET /api/challenges/:id`)
+- [x] Coluna de visualizações criada (`viewsCount` em `Challenge`)
+- [ ] Rota de streaming — não se aplica ao Grupo B
+- [ ] `Content-Type` de mídia — não se aplica ao Grupo B
+- [x] `getFeed` adicionado a `userController.js` / `userRoutes.js` (`GET /api/feed`)
+
+### Checklist dos testes
+- [x] Detalhe sem token → `200`, `isOwner: false`, views em `1` (validado via curl)
+- [ ] Detalhe com o token do dono → `200`, `isOwner: true`, views em `2`
+- [x] Detalhe de item inexistente → `404` (validado via curl)
+- [ ] `/stream` e `Range` — não se aplicam ao Grupo B
+- [x] Feed sem token → `401` (validado via curl)
+- [x] Feed com token, `?page=1&limit=1` → um item só (validado via curl)
+- [x] Feed com token, `?page=2&limit=1` → o próximo item (validado via curl)
+- [ ] Prints de cada curl salvos em `atividade08/`
+
+## Aula 08 — Parte B (Frontend — Feed e Detalhe com Dados Reais)
+
+### Checklist das tarefas
+- [x] `getChallengeFileUrl` adicionada a `utils/media.js` (caminho estático `/uploads`)
+- [x] Classes de card/grade e `.code-view` adicionadas (sem classe de player: Grupo B)
+- [x] `getChallengeById` e `getFeed` criadas em `challengeService.js` (o projeto não tem `userService.js`)
+- [x] Componente `ChallengeCard.vue` criado
+- [x] Tela de Feed com itens reais e "Carregar mais" (implementada; `vite build` ok)
+- [x] Tela de Detalhe com o código real, sem player (implementada)
+- [x] `isOwner` guardado no estado da tela
+
+### Checklist desta etapa (validar no navegador)
+- [ ] Login → Feed na Sidebar → itens reais aparecendo
+- [ ] Clique num card → detalhe sem recarregar a página
+- [ ] Streaming/206 — não se aplica ao Grupo B
+- [ ] Arquivo exibido por completo no detalhe (equivalente da "imagem em resolução real")
+- [ ] F5 no detalhe → views sobem (conferir via curl)
+- [ ] Id inexistente na URL → mensagem de erro, sem quebrar a tela
+- [ ] Prints `feed-real.jpg` e `detalhe-real.jpg` em `atividade08/`

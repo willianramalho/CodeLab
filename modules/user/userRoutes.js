@@ -25,5 +25,6 @@ router.post('/logout', asyncHandler(userController.logout));
 router.get('/profile/me', isAuthenticated, asyncHandler(userController.getMyProfile));
 router.put('/profile/me', isAuthenticated, uploadProfilePhoto, profileUpdateValidator, asyncHandler(userController.updateProfile));
 router.get('/profile/:username', asyncHandler(userController.getPublicProfile));
+router.get('/feed', isAuthenticated, asyncHandler(userController.getFeed));
 
 module.exports = router;
