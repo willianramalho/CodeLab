@@ -276,7 +276,7 @@
       curl: `201` e contagem 0 → 1)
 - [x] Cada um dos quatro casos de erro é recusado com o status esperado (validado nesta
       sessão: sem token `401`, sem título `400`, sem arquivo `400`, formato inválido `400`)
-- [ ] Prints de cada curl salvos em `atividade07/` (`curl-upload-sucesso.jpg`,
+- [x] Prints de cada curl salvos em `atividade07/` (`curl-upload-sucesso.jpg`,
       `curl-erro-sem-token.jpg`, `curl-erro-sem-titulo.jpg`, `curl-erro-sem-arquivo.jpg`,
       `curl-erro-formato-invalido.jpg`)
 
@@ -288,18 +288,21 @@
       no lugar dela, `.code-preview` para a prévia do código)
 - [x] Formulário completo em `UploadView.vue`, adaptado ao domínio (título, descrição,
       arquivo de código-fonte) e ao Grupo B
-- [ ] Barra de progresso funcionando (confirmar ao capturar `progresso-upload.jpg`)
+- [x] Barra de progresso funcionando (evidência: `atividade07/progresso-upload.jpg`)
 - [x] Prévia de imagem: não se aplica ao Grupo B (arquivo de código); no lugar dela, prévia
       local do código (nome, tamanho e primeiras linhas), sem chamada de rede
 - [x] Link "Enviar Desafio" adicionado na Navbar, visível só para usuários autenticados
 - [x] Resposta ao checklist de alcançabilidade escrita (`atividade07/checklist-alcancabilidade.md`)
 
 ### Checklist desta etapa
-- [ ] Login → clique em "Enviar Desafio" → URL muda sem recarregar a página
-- [ ] Envio vazio → erros de campo obrigatório
+- [x] Login → clique em "Enviar Desafio" → URL muda sem recarregar a página (validado nesta
+      sessão no navegador: nenhuma requisição de documento nova; evidência: `atividade07/link-envio.jpg`)
+- [x] Envio vazio → erros de campo obrigatório (título e arquivo), sem chamada à API
 - [x] Se Grupo A: só um dos dois arquivos → erro pedindo o outro (não se aplica, Grupo B)
-- [ ] Arquivo escolhido → prévia aparece sem nenhuma chamada de rede
-- [ ] Envio → barra de progresso avança → mensagem de sucesso
-- [ ] DevTools → Network mostra `Content-Type: multipart/form-data; boundary=...`
-- [ ] Registro criado no banco e `challengesCount` subiu após o envio pela tela
+- [x] Arquivo escolhido → prévia aparece sem nenhuma chamada de rede (evidência:
+      `atividade07/formulario-preenchido.jpg`)
+- [x] Envio → barra de progresso avança (0% → 100%) → "Desafio enviado com sucesso!"
+- [x] DevTools → Network mostra `Content-Type: multipart/form-data; boundary=...` (confirmado na
+      requisição real; print em `atividade07/upload-multipart.jpg`)
+- [x] Registro criado no banco e `challengesCount` subiu após o envio pela tela (5 → 6)
 
