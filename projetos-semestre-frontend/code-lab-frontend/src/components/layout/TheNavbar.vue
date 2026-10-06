@@ -20,6 +20,9 @@ async function handleLogout() {
         <router-link to="/" class="nav-link text-white">Início</router-link>
 
         <template v-if="isAuthenticated">
+          <router-link :to="{ name: 'challenge-upload' }" class="nav-link text-white">
+            <i class="bi bi-cloud-arrow-up me-1"></i>Enviar Desafio
+          </router-link>
           <router-link :to="{ name: 'my-profile' }" class="nav-link text-white">Meu Perfil</router-link>
           <span class="text-white">Olá, {{ user?.username }}</span>
           <button type="button" class="btn btn-sm btn-light" @click="handleLogout">Sair</button>

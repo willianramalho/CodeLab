@@ -7,6 +7,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var searchRoutes = require('./modules/search/searchRoutes');
 var userRoutes = require('./modules/user/userRoutes');
+var challengeRoutes = require('./modules/challenge/challengeRoutes');
 var errorHandler = require('./middlewares/errorHandler');
 
 var app = express();
@@ -26,10 +27,11 @@ app.use(cors({
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // --- Montagem das rotas da API ---
-// Todas as rotas ficam sob o prefixo /api (ex: /api/register, /api/videos).
+// Todas as rotas ficam sob o prefixo /api (ex: /api/register, /api/challenges).
 app.use('/api', indexRouter);
 app.use('/api', searchRoutes);
 app.use('/api', userRoutes);
+app.use('/api', challengeRoutes);
 
 // Captura qualquer rota não tratada pelos routers acima
 app.use((req, res) => {
@@ -45,6 +47,9 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 const sequelize = require('./config/database');
+// Precisa ser carregado ANTES do sync(), senão a tabela challenges nasce
+// sem a foreign key para users (ver config/associations.js).
+require('./config/associations');
 sequelize.sync({ alter: true })
     .then(() => console.log('Banco de dados sincronizado!'))
     .catch(err => console.error('Erro ao sincronizar banco:', err));

@@ -1,4 +1,4 @@
-# Checklists — Aula 01 a Aula 06 (CodeLab)
+# Checklists — Aula 01 a Aula 07 (CodeLab)
 
 ## Aula 01 — Parte A (Backend)
 
@@ -209,7 +209,8 @@
       `atividade05/navbar-link-perfil.jpg`)
 - [x] `.env` com `VITE_UPLOADS_BASE_URL`, `utils/media.js` criado
 - [x] `updateProfile(formData)` em `authService.js` — única chamada a sobrescrever o
-      `Content-Type` padrão
+      `Content-Type` padrão (verdade até a Aula 05; na Aula 07 `createChallenge` em
+      `challengeService.js` passou a ser a segunda, também por causa do multipart)
 - [x] Preview local da foto antes do envio, sem chamada de rede (evidência:
       `atividade05/preview-local.jpg`)
 
@@ -245,3 +246,60 @@
       componentes-base (validado nesta sessão: bio atualizada via API e persistida)
 - [x] Guarda de rota → acesso direto deslogado redireciona ao Login (validado nesta sessão)
 - [x] Console sem erros novos durante o teste (nenhum erro encontrado nesta sessão)
+
+## Aula 07 — Parte A (Backend — Model, Associação e Upload)
+
+> Ficha atualizada em `atividade07/ficha-preparacao.md`: model `Challenge`, tabela
+> `challenges`, **Grupo B** (um arquivo só: `sourceCode`, código-fonte), sem capa,
+> contagem em `challengesCount`.
+>
+> Observação: o enunciado diz que `DESCRIPTION_MAX` já existia em `config/constants.js`
+> desde a Aula 05, mas no CodeLab ela nunca tinha sido criada (só `BIO_MAX`). Foi criada
+> hoje, junto com `TITLE_MAX`, cada uma usada exatamente no seu campo.
+
+### Checklist das tarefas
+- [x] Pasta de upload da entidade criada (`public/uploads/challenges/`)
+- [x] `TITLE_MAX` adicionado a `VALIDATION` (e `DESCRIPTION_MAX`, ver observação acima)
+- [x] Model `Challenge` criado, com o campo de arquivo certo para o Grupo B (`sourceCode`)
+- [x] `config/associations.js` criado (`User.hasMany(Challenge)` / `Challenge.belongsTo(User)`)
+- [x] Middleware de upload `middlewares/challengeMulter.js` criado, coerente com o Grupo B
+      (`.single('sourceCode')`)
+- [x] `challengeValidator`, `challengeService`, `challengeController` e `challengeRoutes` criados
+- [x] Ordem de middlewares na rota conferida (auth → multer → validator → controller)
+- [x] Rota montada em `app.js` (`app.use('/api', challengeRoutes)`)
+- [x] `config/associations` carregado antes do `sync`
+- [x] Tabela `challenges` confirmada no banco, com FK `user_id` → `users(id)`
+      (validado nesta sessão com `SHOW CREATE TABLE challenges`)
+
+### Checklist desta etapa
+- [x] Upload completo funciona e `challengesCount` do usuário sobe (validado nesta sessão via
+      curl: `201` e contagem 0 → 1)
+- [x] Cada um dos quatro casos de erro é recusado com o status esperado (validado nesta
+      sessão: sem token `401`, sem título `400`, sem arquivo `400`, formato inválido `400`)
+- [ ] Prints de cada curl salvos em `atividade07/` (`curl-upload-sucesso.jpg`,
+      `curl-erro-sem-token.jpg`, `curl-erro-sem-titulo.jpg`, `curl-erro-sem-arquivo.jpg`,
+      `curl-erro-formato-invalido.jpg`)
+
+## Aula 07 — Parte B (Frontend — Formulário, Progresso e Alcançabilidade)
+
+### Checklist das tarefas
+- [x] Service `challengeService.js` criado, recebendo `onUploadProgress` como parâmetro
+- [x] `.progress-bar` adicionada ao CSS (`.thumbnail-preview` não se aplica ao Grupo B;
+      no lugar dela, `.code-preview` para a prévia do código)
+- [x] Formulário completo em `UploadView.vue`, adaptado ao domínio (título, descrição,
+      arquivo de código-fonte) e ao Grupo B
+- [ ] Barra de progresso funcionando (confirmar ao capturar `progresso-upload.jpg`)
+- [x] Prévia de imagem: não se aplica ao Grupo B (arquivo de código); no lugar dela, prévia
+      local do código (nome, tamanho e primeiras linhas), sem chamada de rede
+- [x] Link "Enviar Desafio" adicionado na Navbar, visível só para usuários autenticados
+- [x] Resposta ao checklist de alcançabilidade escrita (`atividade07/checklist-alcancabilidade.md`)
+
+### Checklist desta etapa
+- [ ] Login → clique em "Enviar Desafio" → URL muda sem recarregar a página
+- [ ] Envio vazio → erros de campo obrigatório
+- [x] Se Grupo A: só um dos dois arquivos → erro pedindo o outro (não se aplica, Grupo B)
+- [ ] Arquivo escolhido → prévia aparece sem nenhuma chamada de rede
+- [ ] Envio → barra de progresso avança → mensagem de sucesso
+- [ ] DevTools → Network mostra `Content-Type: multipart/form-data; boundary=...`
+- [ ] Registro criado no banco e `challengesCount` subiu após o envio pela tela
+

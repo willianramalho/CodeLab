@@ -32,3 +32,24 @@ a {
 a:hover {
   color: var(--brand-color-dark);
 }
+
+/* Atividade 07: só troca a cor de preenchimento do .progress-bar do
+   Bootstrap 5 para a cor de marca — altura/largura/display continuam vindos
+   do Bootstrap, para não quebrar o wrapper .progress (ver D9). */
+.progress-bar {
+  background-color: var(--brand-color);
+}
+
+/* Prévia local do código-fonte escolhido (Grupo B: sem prévia de imagem). */
+.code-preview {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  max-height: 220px;
+  overflow: auto;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
