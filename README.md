@@ -31,8 +31,10 @@ Uma plataforma interativa onde desenvolvedores podem resolver desafios de progra
 ### Instalação
 
 #### Backend (API)
+Requer MySQL em execução. Copie `.env.example` para `.env` e preencha os valores (o `.env` nunca é versionado).
 ```bash
-cd /Users/willian/CodeLab
+# na raiz do repositório
+cp .env.example .env
 npm install
 npm run dev
 ```
@@ -40,7 +42,8 @@ A API estará disponível em `http://localhost:3000`
 
 #### Frontend
 ```bash
-cd /Users/willian/CodeLab/projetos-semestre-frontend/code-lab-frontend
+cd projetos-semestre-frontend/code-lab-frontend
+cp .env.example .env
 npm install
 npm run dev
 ```
@@ -135,6 +138,8 @@ VITE_API_URL=http://localhost:3000/api
 
 ## 🧪 Testes
 
+Ainda não há suíte de testes automatizados (`npm test`); a verificação é feita por chamadas `curl` à API em execução e pelas telas do frontend. A suíte automatizada e o pipeline de CI são o próximo marco do [Plano de GCS](docs/Plano_GCS_CodeLab.docx).
+
 ### Teste da Busca (Curl)
 ```bash
 curl "http://localhost:3000/api/search?q=teste"
@@ -195,6 +200,13 @@ Isso garante que todas as telas tratam erros de forma uniforme.
 
 - **Aula 01**: Configuração inicial, layout base e Landing Page
 - **Aula 02**: Módulo de busca, camada de serviços e interceptor Axios
+
+## 🔧 Gestão de Configuração (GCS)
+
+- Plano de Gerenciamento de Configuração (enfoque DevOps): [docs/Plano_GCS_CodeLab.docx](docs/Plano_GCS_CodeLab.docx)
+- Fluxo: Issue → branch `feature/<issue>-<descricao>` → Pull Request (Conventional Commits) → revisão do par → merge por squash.
+- A branch `main` é protegida: não aceita push direto, apenas Pull Request aprovado por outra pessoa.
+- Modelos de PR/Issue e revisores: pasta [.github/](.github/).
 
 ## 📄 Licença
 

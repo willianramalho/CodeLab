@@ -1,5 +1,10 @@
 node_modules/
+
+# Variáveis de ambiente locais — NUNCA versionar segredos (PGC 4.1)
 .env
+.env.*
+!.env.example
+
 .DS_Store
 .claude/
 

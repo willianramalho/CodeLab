@@ -1,2 +1,8 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normaliza finais de linha: evita que máquinas Windows gravem CRLF
+# em scripts que rodam no Linux dos runners do GitHub.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary
