@@ -1,11 +1,11 @@
 # Revisores automáticos por área (PGC 2 e 5.2).
 # Vale a ÚLTIMA linha que casar com o arquivo.
 #
-# @hosmar27      = par de revisão (revisa todo PR)
+# @WillianRamalhoTotvs = par de revisão (revisa todo PR)
 # @willianramalho = responsável pelo projeto; também revisa áreas de maior risco
 
-*                          @hosmar27
-/.github/                  @willianramalho @hosmar27
-/docs/                     @willianramalho @hosmar27
-/config/                   @willianramalho @hosmar27
-**/package.json            @willianramalho @hosmar27
+*                          @WillianRamalhoTotvs
+/.github/                  @willianramalho @WillianRamalhoTotvs
+/docs/                     @willianramalho @WillianRamalhoTotvs
+/config/                   @willianramalho @WillianRamalhoTotvs
+**/package.json            @willianramalho @WillianRamalhoTotvs
