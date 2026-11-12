@@ -131,6 +131,7 @@ CodeLab/
 - **Canal de comunicação:** [Issues](https://github.com/willianramalho/CodeLab/issues) e comentários nos Pull Requests do repositório.
 - Ambientes (GitHub Environments): `staging` e `production`, este com revisor obrigatório.
 - Modelos de PR e Issue: pasta [.github/](.github/).
+- Evidências do plano (recusa do push direto na `main` etc.): [docs/evidencias/](docs/evidencias/).
 - Segredos: nunca no código. O `.env` é local e está no `.gitignore`; no pipeline serão usados GitHub Secrets.
 
 ## 👤 Autor
