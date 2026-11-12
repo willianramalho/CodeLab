@@ -1,222 +1,141 @@
 # CodeLab – Plataforma de Desafios de Programação
 
-Uma plataforma interativa onde desenvolvedores podem resolver desafios de programação, acompanhar seu desempenho e interagir com a comunidade.
+Plataforma onde desenvolvedores publicam desafios de programação (com arquivo de código-fonte), exploram os desafios da comunidade e mantêm um perfil público.
+
+Projeto da disciplina de Gerência de Configuração de Software. O repositório é tratado como item de configuração: veja [Gestão de Configuração](#-gestão-de-configuração-gcs).
 
 ## 🎯 Funcionalidades
 
-### Para Usuários
-- ✅ Cadastro e autenticação
-- ✅ Exploração de desafios organizados por níveis de dificuldade
-- ✅ Submissão de soluções e acompanhamento de pontuação
-- ✅ Favoritar desafios resolvidos
-- ✅ Comentários e avaliação dos desafios
-- ✅ Seguir / deixar de seguir outros usuários
-- ✅ Curtir / descurtir soluções e comentários
-- ✅ Feed "Seguindo" (soluções de quem você segue) e Feed "Geral" (todas as submissões)
-- ✅ Upload de arquivo com código-fonte como solução do desafio
+| Situação | Funcionalidade |
+|---|---|
+| ✅ Pronto | Cadastro, login (JWT) e logout |
+| ✅ Pronto | Perfil próprio e público, com foto e bio |
+| ✅ Pronto | Upload de desafio com arquivo de código-fonte e barra de progresso |
+| ✅ Pronto | Feed de desafios (paginado), detalhe do desafio, editar e excluir os próprios desafios |
+| ✅ Pronto | Busca de desafios e usuários |
+| 🚧 Em andamento | Comentários, curtidas e seguir usuários (feed "Seguindo") |
+| 🚧 Planejado | Área de administração (dashboard, moderação de conteúdo e usuários) |
 
-### Para Administradores
-- 📊 Dashboard com estatísticas de desempenho dos usuários
-- 🛠️ Cadastro e gerenciamento de desafios e categorias
-- 🔒 Moderação de conteúdos e controle de usuários
-
-## 🚀 Como Começar
+## 🚀 Como Rodar
 
 ### Pré-requisitos
-- Node.js (v16+)
-- npm ou yarn
-- Vue.js 3+
-- Express.js
+- Node.js 20.19+ (ou 22.12+) e npm — exigência do Vite 8
+- MySQL 8 em execução
 
-### Instalação
+### 1. Banco de dados
+Crie o banco vazio. As tabelas são criadas e atualizadas automaticamente pelos modelos Sequelize (`sequelize.sync({ alter: true })`) quando a API sobe; não há migrations.
+```sql
+CREATE DATABASE codelab CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-#### Backend (API)
-Requer MySQL em execução. Copie `.env.example` para `.env` e preencha os valores (o `.env` nunca é versionado).
+### 2. Backend (API)
 ```bash
 # na raiz do repositório
-cp .env.example .env
+cp .env.example .env        # preencha DB_PASSWORD e JWT_SECRET; o .env nunca é versionado
 npm install
-npm run dev
+npm run dev                 # ou: npm start
 ```
-A API estará disponível em `http://localhost:3000`
+A API estará em `http://localhost:3000/api`. Teste rápido:
+```bash
+curl http://localhost:3000/api
+```
 
-#### Frontend
+### 3. Frontend
 ```bash
 cd projetos-semestre-frontend/code-lab-frontend
 cp .env.example .env
 npm install
 npm run dev
 ```
-O frontend estará disponível em `http://localhost:5173`
+O frontend estará em `http://localhost:5173`. Para gerar o build de produção: `npm run build` (saída em `dist/`).
+
+### Variáveis de ambiente
+
+| Arquivo | Variável | Descrição |
+|---|---|---|
+| `.env` (raiz) | `PORT` | Porta da API (padrão `3000`) |
+| | `CORS_ORIGIN` | Origem permitida do frontend (`http://localhost:5173`) |
+| | `JWT_SECRET` / `JWT_EXPIRES_IN` | Segredo e validade do token. Use um segredo longo e aleatório |
+| | `DB_HOST` `DB_PORT` `DB_NAME` `DB_USER` `DB_PASSWORD` | Conexão MySQL |
+| `.env` (frontend) | `VITE_API_URL` | URL base da API (`http://localhost:3000/api`) |
+| | `VITE_UPLOADS_BASE_URL` | URL base dos arquivos enviados (`http://localhost:3000`) |
+
+Os arquivos `.env.example` listam todas as variáveis, sem valores reais.
+
+## 🧪 Testes
+
+Ainda **não há suíte de testes automatizados** (`npm test` não existe). Ela é o marco 2 do [Plano de GCS](docs/Plano_GCS_CodeLab.docx), junto com o pipeline de CI. Até lá, a verificação é manual, por `curl` na API e pelas telas do frontend. As evidências de cada atividade estão em `projetos-semestre-frontend/code-lab-frontend/01 - Docs/`.
+
+## 🔌 Endpoints da API
+
+Todos sob `/api`. Respostas no formato `{ success, message, data }`.
+
+| Método | Rota | Auth | Descrição |
+|---|---|---|---|
+| GET | `/` | – | Status da API |
+| GET | `/search?q=` | – | Busca de desafios e usuários |
+| POST | `/register` | – | Cadastro |
+| POST | `/login` | – | Login (retorna o JWT) |
+| POST | `/logout` | – | Logout |
+| GET / PUT | `/profile/me` | JWT | Ver / atualizar o próprio perfil (foto em multipart) |
+| GET | `/profile/:username` | opcional | Perfil público |
+| GET | `/feed` | JWT | Feed paginado de desafios |
+| POST | `/challenges` | JWT | Publicar desafio (multipart, com arquivo) |
+| GET | `/challenges/:id` | opcional | Detalhe do desafio |
+| GET | `/challenges/:id/edit` | JWT | Dados para edição (somente o dono) |
+| PUT / DELETE | `/challenges/:id` | JWT | Editar / excluir (somente o dono) |
+| GET | `/my-challenges` | JWT | Desafios do usuário logado |
 
 ## 📁 Estrutura do Projeto
 
 ```
 CodeLab/
-├── bin/                          # Arquivos de inicialização
-├── config/                       # Configurações
-├── middlewares/                  # Middlewares Express
-│   └── apiResponse.js            # Helper de resposta padronizada
-├── modules/                      # Módulos de domínio
-│   └── search/                   # Módulo de busca
-│       ├── searchService.js
-│       ├── searchController.js
-│       └── searchRoutes.js
-├── routes/                       # Rotas principais
-│   └── index.js                  # GET /api
-├── app.js                        # Configuração principal Express
-├── package.json                  # Dependências
-└── .env                          # Variáveis de ambiente
-
-projetos-semestre-frontend/code-lab-frontend/
-├── src/
-│   ├── views/
-│   │   ├── LandingView.vue       # Página inicial
-│   │   └── ...
-│   ├── services/
-│   │   ├── api.js                # Instância Axios com interceptor
-│   │   ├── authService.js        # Serviço de autenticação
-│   │   ├── searchService.js      # Serviço de busca
-│   │   └── systemService.js      # Serviço de sistema
-│   ├── components/
-│   │   └── ...
-│   └── router/
-│       └── index.js              # Configuração Vue Router
-├── package.json
-├── .env
-└── vite.config.js
+├── app.js                 # Configuração do Express e sync do banco
+├── bin/www                # Inicialização do servidor
+├── config/                # Banco, JWT, constantes e associações Sequelize
+├── middlewares/           # Auth, upload (Multer), erros e resposta padronizada
+├── modules/               # Route → Controller → Service (+ Model e Validator)
+│   ├── user/
+│   ├── challenge/
+│   └── search/
+├── routes/                # GET /api
+├── public/uploads/        # Arquivos enviados pelos usuários
+├── docs/                  # Plano de Gerenciamento de Configuração
+├── .github/               # CODEOWNERS e modelos de PR e Issue
+└── projetos-semestre-frontend/code-lab-frontend/   # Frontend Vue 3 + Vite
+    └── src/
+        ├── views/         # Telas (auth, perfil, desafios, admin)
+        ├── components/    # Componentes base, layout e de domínio
+        ├── services/      # Chamadas HTTP (api.js = Axios com interceptor)
+        ├── stores/        # Pinia (autenticação)
+        ├── composables/   # useAuth, useClickOutside
+        └── router/        # Vue Router com guardas de rota
 ```
 
-## 🔌 Arquitetura
+## 🔧 Arquitetura
 
-### Backend - Padrão de Camadas
-Cada módulo segue a arquitetura **Route → Controller → Service**:
+- **Backend:** cada módulo segue **Route → Controller → Service**. A rota mapeia o endpoint, o controller trata a requisição e formata a resposta, e o service concentra regra de negócio e acesso a dados (Sequelize).
+- **Frontend:** nenhum componente chama `fetch`/`axios` diretamente. Tudo passa por `services/`, que usam a instância única do Axios em `api.js`, cujo interceptor normaliza os erros em `{ message, errors, status }`.
 
-- **Route**: Define as rotas HTTP e mapeia para o controller
-- **Controller**: Recebe parâmetros da requisição, chama o service e formata a resposta
-- **Service**: Contém a lógica de negócio e acesso a dados
+## 🛠️ Tecnologias
 
-### Frontend - Serviços Centralizados
-- **api.js**: Instância única do Axios com interceptor de erro centralizado
-- **Services**: Abstraem as chamadas HTTP, nenhum componente faz fetch/axios direto
-- **Componentes Vue**: Consomem apenas os services
-
-## 🔄 Fluxo de Comunicação
-
-```
-Frontend Component
-    ↓
-Services (searchService, authService, etc)
-    ↓
-Axios Instance (com interceptor)
-    ↓
-Backend Routes
-    ↓
-Controllers
-    ↓
-Services
-    ↓
-Response (Normalizado)
-    ↓
-Interceptor (Processa erros)
-    ↓
-Frontend Component
-```
-
-## 📝 Variáveis de Ambiente
-
-### Backend (.env)
-```
-PORT=3000
-CORS_ORIGIN=http://localhost:5173
-```
-
-### Frontend (.env)
-```
-VITE_API_URL=http://localhost:3000/api
-```
-
-## 🧪 Testes
-
-Ainda não há suíte de testes automatizados (`npm test`); a verificação é feita por chamadas `curl` à API em execução e pelas telas do frontend. A suíte automatizada e o pipeline de CI são o próximo marco do [Plano de GCS](docs/Plano_GCS_CodeLab.docx).
-
-### Teste da Busca (Curl)
-```bash
-curl "http://localhost:3000/api/search?q=teste"
-```
-
-**Resposta esperada:**
-```json
-{
-  "success": true,
-  "message": null,
-  "data": {
-    "query": "teste",
-    "challenges": [],
-    "users": []
-  }
-}
-```
-
-## 🛠️ Tecnologias Utilizadas
-
-### Backend
-- **Express.js** - Framework web
-- **Morgan** - Logger de requisições
-- **CORS** - Controle de origem
-- **dotenv** - Gerenciamento de variáveis de ambiente
-
-### Frontend
-- **Vue.js 3** - Framework progressivo
-- **Vue Router 4** - Roteamento
-- **Pinia 4** - Gerenciamento de estado
-- **Axios** - Cliente HTTP
-- **Vite** - Build tool
-
-## 📚 Padrões Utilizados
-
-### Tratamento de Erros Centralizado
-O Axios possui um interceptor que normaliza todos os erros no formato:
-```javascript
-{
-  message: "Descrição do erro",
-  errors: [],
-  status: 400
-}
-```
-
-Isso garante que todas as telas tratam erros de forma uniforme.
-
-### Resposta Padronizada da API
-```javascript
-{
-  success: boolean,
-  message: string | null,
-  data: object
-}
-```
-
-## 🎓 Aulas e Atividades
-
-- **Aula 01**: Configuração inicial, layout base e Landing Page
-- **Aula 02**: Módulo de busca, camada de serviços e interceptor Axios
+- **Backend:** Node.js, Express 5, Sequelize 6, MySQL, JWT, bcryptjs, Multer, express-validator, Morgan, CORS, dotenv
+- **Frontend:** Vue 3, Vue Router, Pinia, Axios, Vite
 
 ## 🔧 Gestão de Configuração (GCS)
 
 - Plano de Gerenciamento de Configuração (enfoque DevOps): [docs/Plano_GCS_CodeLab.docx](docs/Plano_GCS_CodeLab.docx)
-- Fluxo: Issue → branch `feature/<issue>-<descricao>` → Pull Request (Conventional Commits) → revisão do par → merge por squash.
-- A branch `main` é protegida: não aceita push direto, apenas Pull Request aprovado por outra pessoa.
-- Modelos de PR/Issue e revisores: pasta [.github/](.github/).
-
-## 📄 Licença
-
-Este projeto é parte de uma atividade acadêmica.
+- Fluxo: Issue → branch `feature/<issue>-<descricao>` → Pull Request (título em Conventional Commits) → revisão do par → merge por squash.
+- A branch `main` é protegida: não aceita push direto, apenas Pull Request aprovado por outra pessoa. O par de revisão é `@WillianRamalhoTotvs` (revisor automático via [CODEOWNERS](.github/CODEOWNERS)).
+- **Janela de resposta a PRs:** até 3 dias úteis.
+- **Canal de comunicação:** [Issues](https://github.com/willianramalho/CodeLab/issues) e comentários nos Pull Requests do repositório.
+- Ambientes (GitHub Environments): `staging` e `production`, este com revisor obrigatório.
+- Modelos de PR e Issue: pasta [.github/](.github/).
+- Evidências do plano (recusa do push direto na `main` etc.): [docs/evidencias/](docs/evidencias/).
+- Segredos: nunca no código. O `.env` é local e está no `.gitignore`; no pipeline serão usados GitHub Secrets.
 
 ## 👤 Autor
 
-**Willian Ramalho** - [@willianramalho](https://github.com/willianramalho)
+**Willian Ramalho** – [@willianramalho](https://github.com/willianramalho)
 
----
-
-**Status**: Em desenvolvimento 🚧
-
+Projeto acadêmico.
